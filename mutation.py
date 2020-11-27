@@ -118,7 +118,6 @@ def single_mutate(image, group_index, grouping_scheme, lower, upper, direction =
 	
 	return np.reshape(mutated, original_shape)
 
-
 def image_mutate(image, grouping_scheme, lower, upper,  direction_array = None):
 	"""
 	image: targetting image
@@ -129,17 +128,14 @@ def image_mutate(image, grouping_scheme, lower, upper,  direction_array = None):
 	"""
 	# If no direction is give, all goes to upper
 	is_color = len(np.shape(image)) == 3
+	image = np.copy(image)
+	original_shape = np.shape(image)
 	
-	if direction_array == None:
+	if not type(direction_array) == np.ndarray:
 		if is_color:
 			direction_array = np.array([[True,True,True] for i in range(len(grouping_scheme))])
 		else:
 			direction_array = [True for i in range(len(grouping_scheme))]
-		
-	# Validity check
-	if not len(direction_array) == len(grouping_scheme):
-		print("[image_mutate()] The length of direction_array and grouping_scheme should match")
-		return image
 	
 	# Converting direction_array from boolean to 0,1 integer
 	# in order to avoid if statement and use indexing
@@ -149,18 +145,51 @@ def image_mutate(image, grouping_scheme, lower, upper,  direction_array = None):
 	# bound[0] is lower, bound[1] is upper
 	bounds = np.stack((lower,upper))
 	
-	for group_number in len(range(direction_array)):
-		group_indices = grouping_scheme[group_number]
-		direction = direction_binary[group_number]
-		image[group_indices] = bounds[direction][group_indices]
+	
+	# To understand how this works, read grayscale part first
+	if is_color: 
+		# Channel separation
+		img_r = np.reshape(image[:,:,0],-1)
+		img_g = np.reshape(image[:,:,1],-1)
+		img_b = np.reshape(image[:,:,2],-1)
+		direction_r = direction_binary[:,0]
+		direction_g = direction_binary[:,1]
+		direction_b = direction_binary[:,2]
+		bound_r = np.reshape(bounds[:,:,:,0],(2,-1))
+		bound_g = np.reshape(bounds[:,:,:,1],(2,-1))
+		bound_b = np.reshape(bounds[:,:,:,2],(2,-1))
+		for group_number in range(len(direction_binary)):
+			group_indices = grouping_scheme[group_number]
+			dir_r = direction_r[group_number]
+			dir_g = direction_g[group_number]
+			dir_b = direction_b[group_number]
+			img_r[group_indices] = bound_r[dir_r][group_indices]
+			img_g[group_indices] = bound_g[dir_g][group_indices]
+			img_b[group_indices] = bound_b[dir_b][group_indices]
+		# Channel remerging
+		image[:,:,0] = np.reshape(img_r, original_shape[:2])
+		image[:,:,1] = np.reshape(img_g, original_shape[:2])
+		image[:,:,2] = np.reshape(img_b, original_shape[:2])
+	else: #Grayscale
+		bounds = np.reshape(bounds,(2,-1))
+		for group_number in range(len(direction_binary)):
+			group_indices = grouping_scheme[group_number]
+			dir = direction_binary[group_number]
+			image[group_indices] = bounds[dir][group_indices]
+	return image
 		
 		
 if __name__ == "__main__":
-	a = (np.reshape(np.arange(30), (6, 5)) + 0.5 ) / 31
-	a = np.reshape(a,(2,5,3))
+	a = (np.reshape(np.arange(90), (6, 5, 3)) + 0.5 ) / 91
+	a = np.reshape(a,(6,5,3))
 	grouping = group_generation((6, 5), 2)
-	lower, upper = create_boundary_palette(a, 0.2)
+	lower, upper = create_boundary_palette(a, 0.1)
 	single_mutated = single_mutate(a, 0, grouping, lower, upper)
+	# Yellow, Blue, Red
+	# Green, Magenta, Cyan
+	# Red, Green, Blue
+	color_directions = np.array([[True,True, False],[False,False,True], [True,False,False],[False, True,False],[True,False,True],[False,True,True],[True,False,False],[False,True,False],[False,False,True]])
+	image_mutated = image_mutate(a, grouping, lower, upper, color_directions)
 	
 	plt.subplot(231)
 	plt.imshow(lower, vmin=0, vmax=1)
@@ -170,5 +199,7 @@ if __name__ == "__main__":
 	plt.imshow(upper, vmin=0, vmax=1)
 	plt.subplot(235)
 	plt.imshow(single_mutated, vmin=0, vmax=1)
+	plt.subplot(236)
+	plt.imshow(image_mutated, vmin = 0, vmax = 1)
 	plt.show()
 	
