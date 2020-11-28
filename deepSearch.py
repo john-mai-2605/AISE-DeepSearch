@@ -7,11 +7,13 @@ import time
 def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, verbose = False):
 	"""
 	"""
-	s_max_calls = str(max_calls)
 	e = Evaluator(model)
 	original_probability = e.evaluate(image)
 	original_class = np.argmax(original_probability)
+	print("Original class: {}".format(original_class))
 	current_class_prob = original_probability[original_class]
+	# Used for verbose prining
+	s_max_calls = str(max_calls)
 	
 	# Same as relative_evaluation(image, original_class)
 	# For more information, look up in evaluation.py
@@ -29,34 +31,34 @@ def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, 
 	current_class = original_class
 	current_image = image
 	
-	start_time = time.process_time()
-	while True and e.evaluation_count < max_calls:
+	#start_time = time.process_time()
+	while original_class==current_class and e.evaluation_count < max_calls:
 		# Algorithm 2: line 2 
 		grouping = group_generation(img_size, group_size, options = "square")
 		regroup = False 
 		
 		# Main algorithm starts here
-		while True and e.evaluation_count < max_calls and not regroup:
+		while original_class==current_class and e.evaluation_count < max_calls and not regroup:
 			# Line 7
 			target_class = np.argmin(relative_score)
 			# Line 8
 			mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, target_class)
-			# if nothing changed, change the grouping
-			if True:
-			#if np.sum(current_image) == np.sum(mutated_image):
+			# If nothing changed, change the grouping
+			# vv This is a very bad way to check equality.
+			if np.sum(current_image) == np.sum(mutated_image):
 				regroup = True
 				group_size = group_size//2
-				print(group_size)
 			current_image = mutated_image
 			current_class = np.argmax(e.evaluate(current_image))
 			if verbose:
 				print("Call count(can overshoot)\t"+str(e.evaluation_count)+"/"+s_max_calls, end = "\r")
 	if verbose:
 		print()
-		print("{:5.3f}".format(time.process_time() - start_time), end = " seconds\n")
-	success = current_class == original_class
+		#print("{:5.3f}".format(time.process_time() - start_time), end = " seconds\n")
+	success = not current_class == original_class
+	print("Current class: {}".format(current_class))
 	counts = e.evaluation_count
-	return (success, counts, current_image)
+	return (success, current_image, counts)
 		
 			
 def approx_min(image, lower, upper, rel_eval, grouping, target_class):
@@ -74,17 +76,36 @@ def approx_min(image, lower, upper, rel_eval, grouping, target_class):
 	for group_index in range(number_of_groups):
 		if is_color:
 			for ch in range(3):
+				#started_time = time.process_time()
 				upper_exploratory = single_mutate(image, group_index, grouping, lower, upper, direction = True, channel = ch)
 				lower_exploratory = single_mutate(image, group_index, grouping, lower, upper, direction = False, channel = ch)
-				upper_score = rel_eval(upper_exploratory)[target_class]
-				lower_score = rel_eval(lower_exploratory)[target_class]
-				direction_array[group_index,ch] = upper_score > lower_score
+				#print(time.process_time() - started_time)
+				upper_score = rel_eval(upper_exploratory)
+				lower_score = rel_eval(lower_exploratory)
+				
+				# If adversarial input is found during exploration,
+				# Stop there
+				if np.min(upper_score) < 0:
+					return(upper_exploratory)
+				if np.min(lower_score) < 0:
+					return(lower_exploratory)
+				u_target_score = upper_score[target_class]
+				l_target_score = lower_score[target_class]
+				direction_array[group_index,ch] = u_target_score > l_target_score
 		else:# single channel (grayscale)
 			upper_exploratory = single_mutate(image, group_index, grouping, lower, upper, direction = True)
 			lower_exploratory = single_mutate(image, group_index, grouping, lower, upper, direction = False)
-			upper_score = rel_eval(upper_exploratory)[target_class]
-			lower_score = rel_eval(lower_exploratory)[target_class]
-			direction_array[group_index] = upper_score > lower_score
+			upper_score = rel_eval(upper_exploratory)
+			lower_score = rel_eval(lower_exploratory)
+			# If adversarial input is found during exploration,
+			# Stop there
+			if np.min(upper_score) < 0:
+				return(upper_exploratory)
+			if np.min(lower_score) < 0:
+				return(lower_exploratory)
+			u_target_score = upper_score[target_class]
+			l_target_score = lower_score[target_class]
+			direction_array[group_index] = u_target_score > l_target_score
 	mutated_image = image_mutate(image, grouping, lower, upper, direction_array)
 	return(mutated_image)
 			
