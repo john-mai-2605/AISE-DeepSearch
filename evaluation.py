@@ -1,14 +1,21 @@
 import numpy as np
+import time
 
 class Evaluator:
 	def __init__(self, model):
 		self.evaluation_count = 0
 		self.model = model
+		
 	def evaluate(self, image):
 		self.evaluation_count +=1
-		return np.random.rand(30)
+		shape = (1,) + image.shape
+		#started_time = time.process_time()
+		prediction = self.model.predict(np.reshape(image,shape))
+		#print(time.process_time() - started_time)
+		return prediction.reshape(-1)
 		
 	def relative_evaluate(self, image, class_number):
+		
 		new_probability = self.evaluate(image)
 		class_prob = new_probability[class_number] 
 		

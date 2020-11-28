@@ -34,7 +34,7 @@ if len(argv)>2:
 Data={}
 succ=0
 tot=0
-for j in range(1):
+for j in tqdm(range(1)):
     tot+=1
     print("Starting attack on image", j, "with index",inds[j])
     ret=deepSearch(x_test[j],mymodel,8/256,group_size = 32, max_calls = 10000,verbose = True)
