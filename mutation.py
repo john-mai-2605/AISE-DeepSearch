@@ -123,7 +123,7 @@ def image_mutate(image, grouping_scheme, lower, upper,  direction_array = None):
 	image: targetting image
 	direction_array: An array(or list) that has all the directions for all the groups.
 		For color images with three channels direction_array is shaped as [:][3] for each channels.
-	grouping_scheme: list of group indices created by group_generation
+	grouping_scheme: list of group indices created by group_generation()
 	This method mutates every group(pixel) of an image accordingly
 	"""
 	# If no direction is give, all goes to upper
@@ -131,6 +131,7 @@ def image_mutate(image, grouping_scheme, lower, upper,  direction_array = None):
 	image = np.copy(image)
 	original_shape = np.shape(image)
 	
+	# direction_array was not specified
 	if not type(direction_array) == np.ndarray:
 		if is_color:
 			direction_array = np.array([[True,True,True] for i in range(len(grouping_scheme))])
@@ -171,35 +172,62 @@ def image_mutate(image, grouping_scheme, lower, upper,  direction_array = None):
 		image[:,:,1] = np.reshape(img_g, original_shape[:2])
 		image[:,:,2] = np.reshape(img_b, original_shape[:2])
 	else: #Grayscale
+		# Flattening image
+		image = np.reshape(image,-1)
 		bounds = np.reshape(bounds,(2,-1))
 		for group_number in range(len(direction_binary)):
 			group_indices = grouping_scheme[group_number]
 			dir = direction_binary[group_number]
 			image[group_indices] = bounds[dir][group_indices]
+		image = np.reshape(image,original_shape)
 	return image
-		
-		
+			
 if __name__ == "__main__":
-	a = (np.reshape(np.arange(90), (6, 5, 3)) + 0.5 ) / 91
-	a = np.reshape(a,(6,5,3))
 	grouping = group_generation((6, 5), 2)
-	lower, upper = create_boundary_palette(a, 0.1)
-	single_mutated = single_mutate(a, 0, grouping, lower, upper)
+	
+	# Color test
+	test_image = np.reshape((np.arange(90) + 0.5 ) / 91, (6, 5, 3))
+	lower, upper = create_boundary_palette(test_image, 0.1)
+	single_mutated = single_mutate(test_image, 0, grouping, lower, upper)
 	# Yellow, Blue, Red
 	# Green, Magenta, Cyan
 	# Red, Green, Blue
+	print("Yellow, Blue, Red\nGreen, Magenta, Cyan\nRed, Green, Blue\n")
 	color_directions = np.array([[True,True, False],[False,False,True], [True,False,False],[False, True,False],[True,False,True],[False,True,True],[True,False,False],[False,True,False],[False,False,True]])
-	image_mutated = image_mutate(a, grouping, lower, upper, color_directions)
+	image_mutated = image_mutate(test_image, grouping, lower, upper, color_directions)
 	
 	plt.subplot(231)
 	plt.imshow(lower, vmin=0, vmax=1)
 	plt.subplot(232)
-	plt.imshow(a, vmin=0, vmax=1)
+	plt.imshow(test_image, vmin=0, vmax=1)
 	plt.subplot(233)
 	plt.imshow(upper, vmin=0, vmax=1)
 	plt.subplot(235)
 	plt.imshow(single_mutated, vmin=0, vmax=1)
 	plt.subplot(236)
 	plt.imshow(image_mutated, vmin = 0, vmax = 1)
+	plt.show()
+	
+	# Grayscale test
+	g_test_image = np.reshape((np.arange(30) + 0.5 ) / 31, (6, 5))
+	g_lower, g_upper = create_boundary_palette(g_test_image, 0.1)
+	g_single_mutated = single_mutate(g_test_image, 0, grouping, lower, upper)
+	# 1 0 1
+	# 0 1 0
+	# 1 0 0
+	print("101\n010\n100\n")
+	g_directions = np.array([True,False,True,False,True,False,True,False,False])
+	g_image_mutated = image_mutate(g_test_image, grouping, g_lower, g_upper, g_directions)
+	
+	plt.subplot(231)
+	plt.imshow(g_lower, "gray", vmin=0, vmax=1)
+	plt.subplot(232)
+	plt.imshow(g_test_image, "gray", vmin=0, vmax=1)
+	plt.subplot(233)
+	plt.imshow(g_upper, "gray", vmin=0, vmax=1)
+	plt.subplot(235)
+	plt.imshow(g_single_mutated, "gray", vmin=0, vmax=1)
+	plt.subplot(236)
+	plt.imshow(g_image_mutated, "gray", vmin = 0, vmax = 1)
 	plt.show()
 	
