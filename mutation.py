@@ -27,11 +27,13 @@ def group_generation(size = (3,3), group_size = 2, options = ""):
 	
 	Channel invariant
 	"""
-	if options =="" or options.lower() == "square":
-		size_y, size_x = size
+	size_y, size_x = size
+	
+	# trivial case
+	if group_size < 1:
+		return[[i] for i in range(size_x*size_y)]
 		
-		if group_size < 1:
-			return[[i] for i in range(size_x*size_y)]
+	if options =="" or options.lower() == "square":
 		
 		# the "+ group_size -1" is for ceiling to integer
 		group_number_x = (size_x + group_size - 1) // group_size
