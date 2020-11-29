@@ -89,6 +89,12 @@ def single_mutate(image, group_index, grouping_scheme, lower, upper, direction =
 	channel: For color images. 0 for red, 1 for green, 2 for blue.
 	
 	A new patch(group) is taken from either upper or lower image and is replaced of the original image.
+
+	mutated_image, mutated = single_mutated()
+
+	If the image is not mutated since it's already at the
+	boundary for the specified group, it will output the
+	original image and 'False' (bool) for 'mutated'.
 	"""
 	to_upper = direction
 	is_color = len(np.shape(image)) == 3
@@ -109,16 +115,19 @@ def single_mutate(image, group_index, grouping_scheme, lower, upper, direction =
 		alternative_image = np.reshape(lower, -1)
 	# Get the pixel indices to replace
 	replacing_group_indices = grouping_scheme[group_index]
-	# Replace a part of original image to an alternate one.
-	mutated[replacing_group_indices] = alternative_image[replacing_group_indices]
 	
 	# Channel remerge
 	if is_color:
+		if np.product(mutated[replacing_group_indices] == alternative_image[replacing_group_indices*3 + channel]):
+			return (image, False)
+		mutated[replacing_group_indices] = alternative_image[replacing_group_indices*3 + channel]
 		temp = np.copy(image)
 		temp[:,:,channel] = np.reshape(mutated, original_shape)
-		return temp
-	
-	return np.reshape(mutated, original_shape)
+		return (temp, True)
+
+	# Replace a part of original image to an alternate one.		
+	mutated[replacing_group_indices] = alternative_image[replacing_group_indices]
+	return (np.reshape(mutated, original_shape), True)
 
 def image_mutate(image, grouping_scheme, lower, upper,  direction_array = None):
 	"""
