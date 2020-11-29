@@ -50,7 +50,7 @@ def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, 
 			if np.product(current_image == mutated_image):
 				regroup = True
 				group_size = group_size//2
-				print("Group size: {}".format(group_size))
+				print("\nGroup size: {}".format(group_size))
 			current_image = mutated_image
 			current_class = np.argmax(e.evaluate(current_image))
 	if verbose:
@@ -98,9 +98,9 @@ def approx_min(image, lower, upper, rel_eval, grouping, target_class):
 				# If adversarial input is found during exploration,
 				# Stop there
 				if u_target_score < 0:
-					return(upper_exploratory)
+					return(upper_exploratory, np.min(upper_score))
 				if l_target_score < 0:
-					return(lower_exploratory)
+					return(lower_exploratory, np.min(lower_score))
 				dir = u_target_score < l_target_score
 				direction_array[group_index,ch] = dir
 				if min((u_target_score,l_target_score))<minimum:
@@ -116,9 +116,9 @@ def approx_min(image, lower, upper, rel_eval, grouping, target_class):
 			# If adversarial input is found during exploration,
 			# Stop there
 			if u_target_score < 0:
-				return(upper_exploratory)
+				return(upper_exploratory, np.min(upper_score))
 			if l_target_score < 0:
-				return(lower_exploratory)
+				return(lower_exploratory, np.min(lower_score))
 			dir = u_target_score < l_target_score
 			direction_array[group_index] = dir
 			if min((u_target_score,l_target_score))<minimum:

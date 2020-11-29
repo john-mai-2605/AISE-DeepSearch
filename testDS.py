@@ -37,7 +37,7 @@ tot=0
 for j in tqdm(range(2)):
     tot+=1
     print("\nStarting attack on image", j, "with index",inds[j])
-    ret=deepSearch(x_test[j],mymodel,8/255,group_size = 32, max_calls = 760*64,verbose = True)
+    ret=deepSearch(x_test[j],mymodel,8/255,group_size = 32, max_calls = 600,verbose = True)
     dump(ret[1].reshape(1,256,256,3),open(path+"image_"+str(j)+".pkl","wb"))
     Data[j]=(ret[0],ret[2])
     if ret[0]:
@@ -46,3 +46,4 @@ for j in tqdm(range(2)):
     else:
         print("Attack Failed using",ret[2],"queries, success rate is",100*succ/tot)
     dump(Data,open(path+"data.pkl","wb"))
+input()
