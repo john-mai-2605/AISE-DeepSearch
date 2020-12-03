@@ -21,8 +21,8 @@ class Evaluator:
 		class_prob = new_probability[class_number] 
 		
 		relative_score = class_prob - new_probability
-		
-		# Set current class fitness to 1 so it won't become target_class
+
+    # Set current class fitness to 1 so it won't become target_class
 		relative_score[class_number] = 1
 		return relative_score
 

@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
+
 def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False):
 	"""
 	"""
@@ -13,6 +14,7 @@ def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, 
 	original_class = np.argmax(original_probability)
 	print("Original class: {}".format(original_class))
 	current_class_prob = original_probability[original_class]
+
 	# Used for verbose display
 	s_max_calls = str(max_calls)
 	new_score = 1
@@ -65,6 +67,7 @@ def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, 
 	return (success, current_image, counts)
 		
 			
+
 def approx_min(image, lower, upper, rel_eval, grouping, batch_size, target_class):
 	number_of_groups = len(grouping)
 	ch = 0
@@ -145,6 +148,7 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, target_class
 		da[group_index,ch] = direction
 		mutated_image = image_mutate(image, grouping, lower, upper, da)
 	return(mutated_image, np.min((minimum,np.min(total_rel_score))))
+
 			
 if __name__ == "__main__":
 	g_test_image = np.reshape((np.arange(30) + 0.5 ) / 31, (6, 5))
