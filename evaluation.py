@@ -2,9 +2,10 @@ import numpy as np
 import time
 
 class Evaluator:
-	def __init__(self, model):
+	def __init__(self, model, max_count):
 		self.evaluation_count = 0
 		self.model = model
+		self.max_count = max_count
 		
 	def evaluate(self, image):
 		self.evaluation_count +=1
@@ -20,7 +21,8 @@ class Evaluator:
 		class_prob = new_probability[class_number] 
 		
 		relative_score = class_prob - new_probability
-		# Set current class fitness so it won't become target_class
+
+    # Set current class fitness to 1 so it won't become target_class
 		relative_score[class_number] = 1
 		return relative_score
 
