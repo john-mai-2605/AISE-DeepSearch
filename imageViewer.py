@@ -30,6 +30,7 @@ if __name__ == "__main__":
 			temp = pickle.load(file)
 			size = temp.shape[1:]
 			imgs.append(temp.reshape(size))
+	#imgs = [pickle.load(open(file_path, 'rb')).reshape(pickle.load(open(file_path, 'rb')).shape[1:]) for file_path in files]
 	for image in imgs:
 		plt.imshow(image)
 		plt.show()

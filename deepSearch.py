@@ -114,7 +114,7 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, target_class
 			if min((u_target_score,l_target_score))<minimum:
 				minimum_record = (group_index, ch, dir, da_keep)
 				minimum = min((u_target_score,l_target_score))
-			batch_size += 1
+			batch_count += 1
 			if batch_count == batch_size:
 				da_keep = direction_array.copy()
 				batch_count = 0
