@@ -62,7 +62,7 @@ def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, 
 			# Main algorithm starts here
 			while original_class != target and e.evaluation_count < max_calls and not regroup:
 				# Line 7
-				target_class = np.argmin(relative_score)
+				target_class = target
 				# Line 8
 				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, target_class)
 				# If nothing changed, change the grouping
