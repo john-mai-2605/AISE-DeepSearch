@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, verbose = False):
+def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, verbose = False, targeted = False, target = None):
 	"""
 	"""
 	e = Evaluator(model)
@@ -32,26 +32,48 @@ def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, 
 	current_image = image
 	
 	#start_time = time.process_time()
-	while original_class==current_class and e.evaluation_count < max_calls:
-		# Algorithm 2: line 2 
-		grouping = group_generation(img_size, group_size, options = "square")
-		regroup = False 
-		
-		# Main algorithm starts here
-		while original_class==current_class and e.evaluation_count < max_calls and not regroup:
-			# Line 7
-			target_class = np.argmin(relative_score)
-			# Line 8
-			mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, target_class)
-			# If nothing changed, change the grouping
-			# vv This is a very bad way to check equality.
-			if np.sum(current_image) == np.sum(mutated_image):
-				regroup = True
-				group_size = group_size//2
-			current_image = mutated_image
-			current_class = np.argmax(e.evaluate(current_image))
-			if verbose:
-				print("Call count(can overshoot)\t"+str(e.evaluation_count)+"/"+s_max_calls, end = "\r")
+	if not targeted:
+		while original_class == current_class and e.evaluation_count < max_calls:
+			# Algorithm 2: line 2 
+			grouping = group_generation(img_size, group_size, options = "square")
+			regroup = False 
+			
+			# Main algorithm starts here
+			while original_class==current_class and e.evaluation_count < max_calls and not regroup:
+				# Line 7
+				target_class = np.argmin(relative_score)
+				# Line 8
+				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, target_class)
+				# If nothing changed, change the grouping
+				# vv This is a very bad way to check equality.
+				if np.sum(current_image) == np.sum(mutated_image):
+					regroup = True
+					group_size = group_size//2
+				current_image = mutated_image
+				current_class = np.argmax(e.evaluate(current_image))
+				if verbose:
+					print("Call count(can overshoot)\t"+str(e.evaluation_count)+"/"+s_max_calls, end = "\r")
+	else:
+		while original_class==current_class and e.evaluation_count < max_calls:
+			# Algorithm 2: line 2 
+			grouping = group_generation(img_size, group_size, options = "square")
+			regroup = False 
+			
+			# Main algorithm starts here
+			while original_class != target and e.evaluation_count < max_calls and not regroup:
+				# Line 7
+				target_class = np.argmin(relative_score)
+				# Line 8
+				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, target_class)
+				# If nothing changed, change the grouping
+				# vv This is a very bad way to check equality.
+				if np.sum(current_image) == np.sum(mutated_image):
+					regroup = True
+					group_size = group_size//2
+				current_image = mutated_image
+				current_class = np.argmax(e.evaluate(current_image))
+				if verbose:
+					print("Call count(can overshoot)\t"+str(e.evaluation_count)+"/"+s_max_calls, end = "\r")
 	if verbose:
 		print()
 		#print("{:5.3f}".format(time.process_time() - start_time), end = " seconds\n")
