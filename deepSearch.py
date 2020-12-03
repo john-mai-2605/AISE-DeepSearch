@@ -4,8 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-
-def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False):
+def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None):
 	"""
 	"""
 	# You may skip initial part
@@ -29,35 +28,60 @@ def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, 
 	img_size = np.shape(image)[:2]
 	
 	# Algorithm 2: line 5
-	rel_eval = lambda image : e.evaluate(image)[original_class]
-	#rel_eval = lambda image : e.relative_evaluate(image, original_class)
+	#rel_eval = lambda image : e.evaluate(image)[original_class]
+	rel_eval = lambda image : e.relative_evaluate(image, original_class)
 	
 	# Initialize before loop
 	current_class = original_class
 	# Push image to lower bound
 	grouping = group_generation(img_size, group_size, options = "square")
 	current_image = image_mutate(image, grouping, lower, lower)
-	while original_class==current_class and e.evaluation_count < max_calls:
-		# Algorithm 2: line 2 
-		grouping = group_generation(img_size, group_size, options = "square")
-		
-		regroup = False 
-		
-		# Main algorithm starts here
-		while original_class==current_class and e.evaluation_count < max_calls and not regroup:
-			if verbose:
-				print("Call count(can overshoot)\t"+str(e.evaluation_count)+"/"+s_max_calls + " Score: {:.4f}".format(new_score), end = "\r")
-			# Line 7
-			target_class = np.argmin(relative_score)
-			# Line 8
-			mutated_image, new_score = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, target_class)
-			# If nothing changed, change the grouping
-			if True:#np.product(current_image == mutated_image):
-				regroup = True
-				group_size = group_size//2
-				print("\nGroup size: {}".format(group_size))
-			current_image = mutated_image
-			current_class = np.argmax(e.evaluate(current_image))
+
+	if not targeted:
+		while original_class==current_class and e.evaluation_count < max_calls:
+			# Algorithm 2: line 2 
+			grouping = group_generation(img_size, group_size, options = "square")
+
+			regroup = False 
+
+			# Main algorithm starts here
+			while original_class==current_class and e.evaluation_count < max_calls and not regroup:
+				if verbose:
+					print("Call count(can overshoot)\t"+str(e.evaluation_count)+"/"+s_max_calls + " Score: {:.4f}".format(new_score), end = "\r")
+				# Line 7
+				target_class = np.argmin(relative_score)
+				# Line 8
+				mutated_image, new_score = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, target_class)
+				# If nothing changed, change the grouping
+				if True:#np.product(current_image == mutated_image):
+					regroup = True
+					group_size = group_size//2
+					print("\nGroup size: {}".format(group_size))
+				current_image = mutated_image
+				current_class = np.argmax(e.evaluate(current_image))
+	else:
+		while current_class!=target and e.evaluation_count < max_calls:
+			# Algorithm 2: line 2 
+			grouping = group_generation(img_size, group_size, options = "square")
+
+			regroup = False 
+
+			# Main algorithm starts here
+			while current_class != target and e.evaluation_count < max_calls and not regroup:
+				if verbose:
+					print("Call count(can overshoot)\t"+str(e.evaluation_count)+"/"+s_max_calls + " Score: {:.4f}".format(new_score), end = "\r")
+				# Line 7
+				target_class = target
+				# Line 8
+				mutated_image, new_score = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, target_class)
+				# If nothing changed, change the grouping
+				if True:#np.product(current_image == mutated_image):
+					regroup = True
+					group_size = group_size//2
+					print("\nGroup size: {}".format(group_size))
+				current_image = mutated_image
+				current_class = np.argmax(e.evaluate(current_image))		
+
 	if verbose:
 		print()
 
@@ -103,15 +127,15 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, target_class
 			if l_mutated:
 				lower_score = rel_eval(lower_exploratory)
 			else:
-				lower_score = base_score				
-			u_target_score = np.min(upper_score)
-			l_target_score = np.min(lower_score)
+				lower_score = base_score
+			u_target_score = upper_score[target_class]
+			l_target_score = lower_score[target_class]
 			# If adversarial input is found during exploration,
 			# Stop there
 			if u_target_score < 0:
-				return(upper_exploratory, np.min(upper_score))
+				return(upper_exploratory, upper_score[target_class])
 			if l_target_score < 0:
-				return(lower_exploratory, np.min(lower_score))
+				return(lower_exploratory, lower_score[target_class])
 			dir = u_target_score < l_target_score
 			direction_array[group_index,ch] = dir
 			if min((u_target_score,l_target_score))<minimum:
@@ -133,9 +157,9 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, target_class
 			# If adversarial input is found during exploration,
 			# Stop there
 			if u_target_score < 0:
-				return(upper_exploratory, np.min(upper_score))
+				return(upper_exploratory, upper_score[target_class])
 			if l_target_score < 0:
-				return(lower_exploratory, np.min(lower_score))
+				return(lower_exploratory, lower_score[target_class])
 			dir = u_target_score < l_target_score
 			direction_array[group_index] = dir
 			if min((u_target_score,l_target_score))<minimum:
@@ -143,11 +167,11 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, target_class
 				minimum = min((u_target_score,l_target_score))
 	mutated_image = image_mutate(image, grouping, lower, upper, direction_array)
 	total_rel_score = rel_eval(mutated_image)
-	if(minimum < np.min(total_rel_score)):
+	if(minimum < total_rel_score[target_class]):
 		group_index, ch, direction, da =minimum_record
 		da[group_index,ch] = direction
 		mutated_image = image_mutate(image, grouping, lower, upper, da)
-	return(mutated_image, np.min((minimum,np.min(total_rel_score))))
+	return(mutated_image, np.min((minimum,total_rel_score[target_class])))
 
 			
 if __name__ == "__main__":

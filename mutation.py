@@ -31,7 +31,7 @@ def group_generation(size = (3,3), group_size = 2, options = ""):
 	
 	# trivial case
 	if group_size < 1:
-		return[[i] for i in range(size_x*size_y)]
+		return np.array([[i] for i in range(size_x*size_y)])
 		
 	if options =="" or options.lower() == "square":
 		
@@ -53,7 +53,7 @@ def group_generation(size = (3,3), group_size = 2, options = ""):
 		# 2. reshaped into single dimensional array
 	else: # no option match found
 		print("[group_generation]Unavailable option: ", end = str(option) + "\n")
-		return[[i] for i in range(size_x*size_y)]
+		return np.array([[i] for i in range(size_x*size_y)])
 	
 def create_boundary_palette(image, distortion_cap):
 	"""
