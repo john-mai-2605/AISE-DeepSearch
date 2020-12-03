@@ -145,9 +145,9 @@ def image_mutate(image, grouping_scheme, lower, upper,  direction_array = None):
 	# direction_array was not specified
 	if not type(direction_array) == np.ndarray:
 		if is_color:
-			direction_array = np.array([[True,True,True] for i in range(len(grouping_scheme))])
+			direction_array = np.array([[False,False,False] for i in range(len(grouping_scheme))])
 		else:
-			direction_array = [True for i in range(len(grouping_scheme))]
+			direction_array = [False for i in range(len(grouping_scheme))]
 	
 	# Converting direction_array from boolean to 0,1 integer
 	# in order to avoid if statement and use indexing
