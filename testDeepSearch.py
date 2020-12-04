@@ -25,13 +25,15 @@ import argparse
 parser = argparse.ArgumentParser()
     
 # Argument lists
-parser.add_argument('--targeted', type=int, default=0, choices = [0,1], help="Tartgeted (1) or non-targeted (0, default) attack")
-parser.add_argument('--target', type=int, default=0, help="Tartgeted class (applicable for targeted attack)")
+parser.add_argument('--targeted', type=int, default=0, choices = [0,1], help="Targeted (1) or non-targeted (0, default) attack")
+parser.add_argument('--target', type=int, default=0, help="Targeted class (applicable for targeted attack)")
+parser.add_argument('--proba', type=int, default=1, choices=[0,1], help="Output from model is probability (1, default) or class (0)")
 
 # Read the argument
 args = parser.parse_args()
-targeted = args.targeted
+targeted = args.targeted == 1
 target = args.target
+proba = args.proba == 1
 
 if targeted:
 	print(f'Targeted attack with target of class @{target}')
@@ -55,7 +57,7 @@ tot=0
 for j in tqdm(range(2)):
     tot+=1
     print("\nStarting attack on image", j, "with index",inds[j])
-    ret=deepSearch(x_test[j],y_test[j], mymodel,8/256,group_size = 16, max_calls = 6000, batch_size = 50, verbose = True, targeted = targeted, target = target)
+    ret=deepSearch(x_test[j],y_test[j], mymodel,8/256,group_size = 16, max_calls = 6000, batch_size = 50, verbose = True, targeted = targeted, target = target, proba = proba)
     dump(ret[1].reshape(1,256,256,3),open(path+"image_"+str(j)+".pkl","wb"))
     Data[j]=(ret[0],ret[2])
     if ret[0]:

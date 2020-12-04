@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-def deepSearch(image, label, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None):
+def deepSearch(image, label, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None, proba = True):
 	"""
 	"""
 	# You may skip initial part
@@ -25,7 +25,7 @@ def deepSearch(image, label, model, distortion_cap, group_size= 16, max_calls = 
 	
 	# Algorithm 2: line 5
 	#rel_eval = lambda image : e.evaluate(image)[original_class]
-	rel_eval = lambda image : e.relative_evaluate(image, original_class)
+	rel_eval = lambda image : e.relative_evaluate(image, original_class, proba)
 	
 	# Initialize before loop
 	current_class = original_class

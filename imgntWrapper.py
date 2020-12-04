@@ -30,16 +30,22 @@ class CompatModel:
         self.model.cuda()
         self.model.eval()
         self.calls=0
-    def predict(self,images):
+    def predict(self,images,proba=True):
         #start_time = time.process_time()
         self.calls+=images.shape[0]
         with torch.no_grad():
-            t_images=torch.tensor(normalize(images),dtype=torch.float).cuda()
+            t_images=torch.tensor(normalize(images),dtype=torch.float).cuda()             
             t_images=t_images.permute(0,3,1,2)
             res=self.model(t_images)
             res=torch.nn.functional.softmax(res,dim=1)
         #print("{:.3f}".format(time.process_time()-start_time))
-        return res.cpu().detach().numpy()
+        if proba:
+            return res.cpu().detach().numpy()
+        else:
+            c = torch.argmax(res).cpu().detach().numpy()
+            output = torch.zeros(10)
+            output[c] = 1
+            return output
 mymodel=CompatModel()
 
 def load_image(id):
