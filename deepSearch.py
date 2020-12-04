@@ -4,19 +4,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None):
+def deepSearch(image, label, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None):
 	"""
 	"""
 	# You may skip initial part
 	e = Evaluator(model, max_calls)
 	original_probability = e.evaluate(image)
-	original_class = np.argmax(original_probability)
-	print("Original class: {}".format(original_class))
+	original_class = label
+	print("Original class: {}".format(e.idx2name(original_class)))
 	current_class_prob = original_probability[original_class]
-
-	# Used for verbose display
-	s_max_calls = str(max_calls)
-	new_score = 1
 	
 	# Same as relative_evaluation(image, original_class)
 	# For more information, look up in evaluation.py
@@ -46,20 +42,21 @@ def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, 
 
 			# Main algorithm starts here
 			while original_class==current_class and e.evaluation_count < max_calls and not regroup:
-				if verbose:
-					print("Call count(can overshoot)\t"+str(e.evaluation_count)+"/"+s_max_calls + " Score: {:.4f}".format(new_score), end = "\r")
 				# Line 7
-				target_class = np.argmin(relative_score)
+				target_class = np.argmin(rel_eval(current_image))
 				# Line 8
-				mutated_image, new_score = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, target_class)
+				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, targeted, target_class, e ,verbose)
 				# If nothing changed, change the grouping
 				if True:#np.product(current_image == mutated_image):
 					regroup = True
 					group_size = group_size//2
-					print("\nGroup size: {}".format(group_size))
+					if verbose:
+						print("\nGroup size: {}".format(group_size))
 				current_image = mutated_image
 				current_class = np.argmax(e.evaluate(current_image))
+		success = not current_class == original_class
 	else:
+		print("  Target class: {}".format(e.idx2name(target)))
 		while current_class!=target and e.evaluation_count < max_calls:
 			# Algorithm 2: line 2 
 			grouping = group_generation(img_size, group_size, options = "square")
@@ -68,31 +65,26 @@ def deepSearch(image, model, distortion_cap, group_size= 16, max_calls = 10000, 
 
 			# Main algorithm starts here
 			while current_class != target and e.evaluation_count < max_calls and not regroup:
-				if verbose:
-					print("Call count(can overshoot)\t"+str(e.evaluation_count)+"/"+s_max_calls + " Score: {:.4f}".format(new_score), end = "\r")
 				# Line 7
 				target_class = target
 				# Line 8
-				mutated_image, new_score = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, target_class)
+				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, targeted, target_class, e, verbose)
 				# If nothing changed, change the grouping
 				if True:#np.product(current_image == mutated_image):
 					regroup = True
 					group_size = group_size//2
-					print("\nGroup size: {}".format(group_size))
+					if verbose:
+						print("\nGroup size: {}".format(group_size))
 				current_image = mutated_image
-				current_class = np.argmax(e.evaluate(current_image))		
+				current_class = np.argmax(e.evaluate(current_image))
+		success = current_class == target
 
-	if verbose:
-		print()
-
-	success = not current_class == original_class
-	print("Current class: {}".format(current_class))
 	counts = e.evaluation_count
 	return (success, current_image, counts)
 		
 			
 
-def approx_min(image, lower, upper, rel_eval, grouping, batch_size, target_class):
+def approx_min(image, lower, upper, rel_eval, grouping, batch_size, targeted,  target_class, e, verbose):
 	number_of_groups = len(grouping)
 	ch = 0
 	is_color = len(np.shape(image)) == 3
@@ -133,9 +125,9 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, target_class
 			# If adversarial input is found during exploration,
 			# Stop there
 			if u_target_score < 0:
-				return(upper_exploratory, upper_score[target_class])
+				return(upper_exploratory)
 			if l_target_score < 0:
-				return(lower_exploratory, lower_score[target_class])
+				return(lower_exploratory)
 			dir = u_target_score < l_target_score
 			direction_array[group_index,ch] = dir
 			if min((u_target_score,l_target_score))<minimum:
@@ -146,7 +138,20 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, target_class
 				da_keep = direction_array.copy()
 				batch_count = 0
 				image = image_mutate(image, grouping, lower,upper, da_keep)
+				if verbose or targeted:
+					current_class = e.current_class(image)
+				if targeted:
+					rel_eval = lambda image : e.relative_evaluate(image, current_class)
 				base_score = rel_eval(image)
+				if not targeted:
+					target_class = np.argmin(base_score)
+				if verbose:
+					probabilities = e.evaluate(image)
+					new_score = base_score[target_class]
+					print(str(e.evaluation_count) + "/" + str(e.max_count) + " Score: {:.3e}".format(new_score),end="\t\t\t\t\t\n")
+					print("currentC: {0}...  currentP: {2:.3e}  targetP: {1:.3e}".format(e.idx2name(current_class)[:7], probabilities[target_class], np.max(probabilities)), end = '\r\b\r')
+					
+					
 		else:# single channel (grayscale)
 			upper_exploratory = single_mutate(image, group_index, grouping, lower, upper, direction = True)
 			lower_exploratory = single_mutate(image, group_index, grouping, lower, upper, direction = False)
@@ -168,10 +173,10 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, target_class
 	mutated_image = image_mutate(image, grouping, lower, upper, direction_array)
 	total_rel_score = rel_eval(mutated_image)
 	if(minimum < total_rel_score[target_class]):
-		group_index, ch, direction, da =minimum_record
+		group_index, ch, direction, da = minimum_record
 		da[group_index,ch] = direction
 		mutated_image = image_mutate(image, grouping, lower, upper, da)
-	return(mutated_image, np.min((minimum,total_rel_score[target_class])))
+	return(mutated_image)
 
 			
 if __name__ == "__main__":

@@ -1,11 +1,14 @@
 import numpy as np
 import time
+import json
 
 class Evaluator:
 	def __init__(self, model, max_count):
 		self.evaluation_count = 0
 		self.model = model
 		self.max_count = max_count
+		self.classes = json.load(open("classes.json","r"))
+		self.classes = {int(k):v for k,v in self.classes.items()}
 		
 	def evaluate(self, image):
 		self.evaluation_count +=1
@@ -14,6 +17,12 @@ class Evaluator:
 		prediction = self.model.predict(np.reshape(image,shape))
 		#print(time.process_time() - started_time)
 		return prediction.reshape(-1)
+		
+	def current_class(self,image):
+		return(np.argmax(self.evaluate(image)))
+		
+	def idx2name(self,class_index):
+		return(self.classes[class_index])
 		
 	def relative_evaluate(self, image, class_number):
 		

@@ -64,7 +64,7 @@ inds=[37860, 5869]
 labels=[0, 1]
 labels=np.array(labels)
 if INDICES=="":
-    x_test=np.stack([load_image(i+1) for i in tqdm(inds)])
+    x_test=np.stack([load_image(i+1) for i in inds])
     y_test=labels
 if INDICES=="ALL":
     x_test=np.stack([load_image(i+1) for i in tqdm(range(50000))])
