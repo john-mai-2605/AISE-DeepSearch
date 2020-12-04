@@ -50,7 +50,7 @@ class Evaluator:
 	def targeted_evaluate(self, image, target):
 		prob = self.evaluate(image)
 		if np.argmax(prob) == target:
-			return -1
+			return -prob
 		return 1/prob
 
 	def decide_direction(self, original_probability, mutated_probability):
