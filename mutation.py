@@ -54,6 +54,25 @@ def group_generation(size = (3,3), group_size = 2, options = ""):
 	else: # no option match found
 		print("[group_generation]Unavailable option: ", end = str(option) + "\n")
 		return np.array([[i] for i in range(size_x*size_y)])
+		
+def read_direction(image,lower,upper,grouping):
+	number_of_groups = len(grouping)
+	is_color = len(np.shape(image)) == 3
+	image = np.reshape(image,-1)
+	upper = np.reshape(upper,-1)
+	if is_color:
+		direction_array = np.zeros((number_of_groups,3), dtype = bool)
+	else:
+		direction_array = np.zeros(number_of_groups, dtype = bool)
+		
+	if is_color:
+		i = 0
+		for group in grouping:
+			for ch in range(3):
+				yo = np.product(image[group*3+ch] == upper[group*3+ch])
+				direction_array[i,ch] = yo
+			i += 1
+	return direction_array
 	
 def create_boundary_palette(image, distortion_cap):
 	"""

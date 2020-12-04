@@ -94,7 +94,7 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, targeted,  t
 	# Initialize direction_array
 	# This array keeps all the decision
 	if is_color:
-		direction_array = np.zeros((number_of_groups,3), dtype = bool)
+		direction_array = read_direction(image,lower,upper,grouping)
 	else:
 		direction_array = np.zeros(number_of_groups, dtype = bool)
 	
