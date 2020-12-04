@@ -57,6 +57,7 @@ def deepSearch(image, label, model, distortion_cap, group_size= 16, max_calls = 
 		success = not current_class == original_class
 	else:
 		print("  Target class: {}".format(e.idx2name(target)))
+		rel_eval = lambda image :e.targeted_evaluate(image, target)
 		while current_class!=target and e.evaluation_count < max_calls:
 			# Algorithm 2: line 2 
 			grouping = group_generation(img_size, group_size, options = "square")
@@ -68,9 +69,9 @@ def deepSearch(image, label, model, distortion_cap, group_size= 16, max_calls = 
 				# Line 7
 				target_class = target
 				# Line 8
-				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, targeted, target_class, e, verbose)
+				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, targeted, target, e, verbose)
 				# If nothing changed, change the grouping
-				if True:#np.product(current_image == mutated_image):
+				if np.product(current_image == mutated_image):
 					regroup = True
 					group_size = group_size//2
 					if verbose:
@@ -138,15 +139,14 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, targeted,  t
 				da_keep = direction_array.copy()
 				batch_count = 0
 				image = image_mutate(image, grouping, lower,upper, da_keep)
-				if verbose or targeted:
-					current_class = e.current_class(image)
-				if targeted:
-					rel_eval = lambda image : e.relative_evaluate(image, current_class)
 				base_score = rel_eval(image)
-				if not targeted:
+				if targeted:
+					current_class = e.current_class(image)
+				else:
 					target_class = np.argmin(base_score)
 				if verbose:
 					probabilities = e.evaluate(image)
+					current_class = np.argmax(probabilities)
 					new_score = base_score[target_class]
 					print(str(e.evaluation_count) + "/" + str(e.max_count) + " Score: {:.3e}".format(new_score),end="\t\t\t\t\t\n")
 					print("currentC: {0}...  currentP: {2:.3e}  targetP: {1:.3e}".format(e.idx2name(current_class)[:7], probabilities[target_class], np.max(probabilities)), end = '\r\b\r')
