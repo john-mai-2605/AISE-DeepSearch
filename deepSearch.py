@@ -3,12 +3,15 @@ from evaluation import *
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import os
+import random
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
-def deepSearch(image, label, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None):
+def deepSearch(cifar_, image, label, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None):
 	"""
 	"""
 	# You may skip initial part
-	e = Evaluator(model, max_calls)
+	e = Evaluator(model, max_calls, cifar_)
 	original_probability = e.evaluate(image)
 	original_class = label
 	print("Original class: {}".format(e.idx2name(original_class)))
@@ -79,8 +82,9 @@ def deepSearch(image, label, model, distortion_cap, group_size= 16, max_calls = 
 				current_image = mutated_image
 				current_class = np.argmax(e.evaluate(current_image))
 		success = current_class == target
-
+	
 	counts = e.evaluation_count
+	print("Final class: ", e.idx2name(e.current_class(current_image)))
 	return (success, current_image, counts)
 		
 			
@@ -130,6 +134,8 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, targeted,  t
 			if l_target_score < 0:
 				return(lower_exploratory)
 			dir = u_target_score < l_target_score
+			if u_target_score == l_target_score:
+				dir = bool(random.getrandbits(1))
 			direction_array[group_index,ch] = dir
 			if min((u_target_score,l_target_score))<minimum:
 				minimum_record = (group_index, ch, dir, da_keep)
@@ -150,6 +156,8 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, targeted,  t
 					new_score = base_score[target_class]
 					print(str(e.evaluation_count) + "/" + str(e.max_count) + " Score: {:.3e}".format(new_score),end="\t\t\t\t\t\n")
 					print("currentC: {0}...  currentP: {2:.3e}  targetP: {1:.3e}".format(e.idx2name(current_class)[:7], probabilities[target_class], np.max(probabilities)), end = '\r\b\r')
+				if e.evaluation_count > e. max_count:
+					break
 					
 					
 		else:# single channel (grayscale)
