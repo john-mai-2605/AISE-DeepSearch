@@ -21,19 +21,16 @@ class Evaluator:
 		if proba:
 			self.evaluation_count +=1
 			#started_time = time.process_time()
-			prediction = self.model.predict_proba(np.reshape(image,shape))
+			prediction = self.model.predict(np.reshape(image,shape))
 			#print(time.process_time() - started_time)
 			return prediction.reshape(-1)
 		else:
 			predictions = np.array([])
 			img = np.reshape(image,shape)
-			for i in range(100):
-				self.evaluation_count +=1
-				pred = self.model.predict(img + np.random.normal(0, 30, shape), False)
-				pred = pred.reshape(-1)
-				predictions = np.vstack((predictions, pred))
-				prediction = np.mean(predictions, axis = 0)
-				print(prediction)
+			predictions = [self.model.predict(img + np.random.normal(0, 30, shape), False).reshape(-1).tolist() for i in range(100)]
+			self.evaluation_count +=100
+			predictions = np.array(predictions)
+			prediction = np.mean(predictions, axis = 0)
 			return prediction
 		
 	def relative_evaluate(self, image, class_number, proba = True):
