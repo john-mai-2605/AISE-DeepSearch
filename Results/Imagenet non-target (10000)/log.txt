@@ -1,0 +1,251 @@
+Non-targeted Imagenet 
+
+Starting attack on image 1   0
+Original class: tench, Tinca tinca
+Final class:  barracouta, snoek
+Attack Succeeded with 808 queries, success rate is	 100.0
+
+Starting attack on image 2   1
+Original class: goldfish, Carassius auratus
+Final class:  screwdriver
+Attack Succeeded with 261 queries, success rate is	 100.0
+
+Starting attack on image 3   2
+Original class: great white shark, white shark, man-eater, man-eating shark, Carcharodon carcharias
+Final class:  loggerhead, loggerhead turtle, Caretta caretta
+Attack Succeeded with 200 queries, success rate is	 100.0
+
+Starting attack on image 4   3
+Original class: tiger shark, Galeocerdo cuvieri
+Final class:  barracouta, snoek
+Attack Succeeded with 135 queries, success rate is	 100.0
+
+Starting attack on image 5   4
+Original class: hammerhead, hammerhead shark
+Final class:  great white shark, white shark, man-eater, man-eating shark, Carcharodon carcharias
+Attack Succeeded with 984 queries, success rate is	 100.0
+
+Starting attack on image 6   5
+Original class: electric ray, crampfish, numbfish, torpedo
+Final class:  jaguar, panther, Panthera onca, Felis onca
+Attack Succeeded with 1508 queries, success rate is	 100.0
+
+Starting attack on image 7   6
+Original class: stingray
+Final class:  sea slug, nudibranch
+Attack Succeeded with 145 queries, success rate is	 100.0
+
+Starting attack on image 8   7
+Original class: cock
+Final class:  hen
+Attack Succeeded with 70 queries, success rate is	 100.0
+
+Starting attack on image 9   8
+Original class: hen
+Final class:  cock
+Attack Succeeded with 200 queries, success rate is	 100.0
+
+Starting attack on image 10   9
+Original class: ostrich, Struthio camelus
+Final class:  llama
+Attack Succeeded with 2873 queries, success rate is	 100.0
+
+Starting attack on image 11   10
+Original class: brambling, Fringilla montifringilla
+Final class:  robin, American robin, Turdus migratorius
+Attack Succeeded with 844 queries, success rate is	 100.0
+
+Starting attack on image 12   11
+Original class: goldfinch, Carduelis carduelis
+Final class:  brambling, Fringilla montifringilla
+Attack Succeeded with 1703 queries, success rate is	 100.0
+
+Starting attack on image 13   12
+Original class: house finch, linnet, Carpodacus mexicanus
+Final class:  brambling, Fringilla montifringilla
+Attack Succeeded with 569 queries, success rate is	 100.0
+
+Starting attack on image 14   13
+Original class: junco, snowbird
+Final class:  chickadee
+Attack Succeeded with 857 queries, success rate is	 100.0
+
+Starting attack on image 15   14
+Original class: indigo bunting, indigo finch, indigo bird, Passerina cyanea
+Final class:  jay
+Attack Succeeded with 135 queries, success rate is	 100.0
+
+Starting attack on image 16   15
+Original class: robin, American robin, Turdus migratorius
+Final class:  junco, snowbird
+Attack Succeeded with 1573 queries, success rate is	 100.0
+
+Starting attack on image 17   16
+Original class: bulbul
+Final class:  house finch, linnet, Carpodacus mexicanus
+Attack Succeeded with 2418 queries, success rate is	 100.0
+
+Starting attack on image 18   17
+Original class: jay
+Final class:  bulbul
+Attack Succeeded with 465 queries, success rate is	 100.0
+
+Starting attack on image 19   18
+Original class: magpie
+Final class:  jay
+Attack Succeeded with 139 queries, success rate is	 100.0
+
+Starting attack on image 20   19
+Original class: chickadee
+Final class:  colobus, colobus monkey
+Attack Succeeded with 2288 queries, success rate is	 100.0
+
+Starting attack on image 21   20
+Original class: water ouzel, dipper
+Final class:  white stork, Ciconia ciconia
+Attack Succeeded with 95 queries, success rate is	 100.0
+
+Starting attack on image 22   21
+Original class: kite
+Final class:  hornbill
+Attack Succeeded with 53 queries, success rate is	 100.0
+
+Starting attack on image 23   22
+Original class: bald eagle, American eagle, Haliaeetus leucocephalus
+Final class:  macaw
+Attack Succeeded with 200 queries, success rate is	 100.0
+
+Starting attack on image 24   23
+Original class: vulture
+Final class:  kite
+Attack Succeeded with 10 queries, success rate is	 100.0
+
+Starting attack on image 25   24
+Original class: great grey owl, great gray owl, Strix nebulosa
+Final class:  European gallinule, Porphyrio porphyrio
+Attack Succeeded with 854 queries, success rate is	 100.0
+
+Starting attack on image 26   25
+Original class: European fire salamander, Salamandra salamandra
+Final class:  European fire salamander, Salamandra salamandra
+Attack Failed using 10027 queries, success rate is	 96.15384615384616
+
+Starting attack on image 27   26
+Original class: common newt, Triturus vulgaris
+Final class:  axolotl, mud puppy, Ambystoma mexicanum
+Attack Succeeded with 141 queries, success rate is	 96.29629629629629
+
+Starting attack on image 28   27
+Original class: eft
+Final class:  green lizard, Lacerta viridis
+Attack Succeeded with 399 queries, success rate is	 96.42857142857143
+
+Starting attack on image 29   28
+Original class: spotted salamander, Ambystoma maculatum
+Final class:  rock python, rock snake, Python sebae
+Attack Succeeded with 1576 queries, success rate is	 96.55172413793103
+
+Starting attack on image 30   29
+Original class: axolotl, mud puppy, Ambystoma mexicanum
+Final class:  feather boa, boa
+Attack Succeeded with 1898 queries, success rate is	 96.66666666666667
+
+Starting attack on image 31   30
+Original class: bullfrog, Rana catesbeiana
+Final class:  tailed frog, bell toad, ribbed toad, tailed toad, Ascaphus trui
+Attack Succeeded with 659 queries, success rate is	 96.7741935483871
+
+Starting attack on image 32   31
+Original class: tree frog, tree-frog
+Final class:  gar, garfish, garpike, billfish, Lepisosteus osseus
+Attack Succeeded with 70 queries, success rate is	 96.875
+
+Starting attack on image 33   32
+Original class: tailed frog, bell toad, ribbed toad, tailed toad, Ascaphus trui
+Final class:  bullfrog, Rana catesbeiana
+Attack Succeeded with 5 queries, success rate is	 96.96969696969697
+
+Starting attack on image 34   33
+Original class: loggerhead, loggerhead turtle, Caretta caretta
+Final class:  leatherback turtle, leatherback, leathery turtle, Dermochelys coriacea
+Attack Succeeded with 269 queries, success rate is	 97.05882352941177
+
+Starting attack on image 35   34
+Original class: leatherback turtle, leatherback, leathery turtle, Dermochelys coriacea
+Final class:  rock crab, Cancer irroratus
+Attack Succeeded with 5 queries, success rate is	 97.14285714285714
+
+Starting attack on image 36   35
+Original class: mud turtle
+Final class:  terrapin
+Attack Succeeded with 27 queries, success rate is	 97.22222222222223
+
+Starting attack on image 37   36
+Original class: terrapin
+Final class:  mud turtle
+Attack Succeeded with 334 queries, success rate is	 97.29729729729729
+
+Starting attack on image 38   37
+Original class: box turtle, box tortoise
+Final class:  terrapin
+Attack Succeeded with 135 queries, success rate is	 97.36842105263158
+
+Starting attack on image 39   38
+Original class: banded gecko
+Final class:  alligator lizard
+Attack Succeeded with 464 queries, success rate is	 97.43589743589743
+
+Starting attack on image 40   39
+Original class: common iguana, iguana, Iguana iguana
+Final class:  green lizard, Lacerta viridis
+Attack Succeeded with 984 queries, success rate is	 97.5
+
+Starting attack on image 41   40
+Original class: American chameleon, anole, Anolis carolinensis
+Final class:  green lizard, Lacerta viridis
+Attack Succeeded with 464 queries, success rate is	 97.5609756097561
+
+Starting attack on image 42   41
+Original class: whiptail, whiptail lizard
+Final class:  common iguana, iguana, Iguana iguana
+Attack Succeeded with 919 queries, success rate is	 97.61904761904762
+
+Starting attack on image 43   42
+Original class: agama
+Final class:  common newt, Triturus vulgaris
+Attack Succeeded with 464 queries, success rate is	 97.67441860465117
+
+Starting attack on image 44   43
+Original class: frilled lizard, Chlamydosaurus kingi
+Final class:  African chameleon, Chamaeleo chamaeleon
+Attack Succeeded with 464 queries, success rate is	 97.72727272727273
+
+Starting attack on image 45   44
+Original class: alligator lizard
+Final class:  marimba, xylophone
+Attack Succeeded with 2353 queries, success rate is	 97.77777777777777
+
+Starting attack on image 46   45
+Original class: Gila monster, Heloderma suspectum
+Final class:  spotted salamander, Ambystoma maculatum
+Attack Succeeded with 399 queries, success rate is	 97.82608695652173
+
+Starting attack on image 47   46
+Original class: green lizard, Lacerta viridis
+Final class:  American chameleon, anole, Anolis carolinensis
+Attack Succeeded with 5 queries, success rate is	 97.87234042553192
+
+Starting attack on image 48   47
+Original class: African chameleon, Chamaeleo chamaeleon
+Final class:  green lizard, Lacerta viridis
+Attack Succeeded with 204 queries, success rate is	 97.91666666666667
+
+Starting attack on image 49   48
+Original class: Komodo dragon, Komodo lizard, dragon lizard, giant lizard, Varanus komodoensis
+Final class:  tench, Tinca tinca
+Attack Succeeded with 269 queries, success rate is	 97.95918367346938
+
+Starting attack on image 50   49
+Original class: African crocodile, Nile crocodile, Crocodylus niloticus
+Final class:  American alligator, Alligator mississipiensis
+Attack Succeeded with 728 queries, success rate is	 98.0

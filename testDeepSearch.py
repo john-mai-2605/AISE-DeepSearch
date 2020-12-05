@@ -62,7 +62,7 @@ if cifar_:
 	batch_size = 64
 else:
 	from imgntWrapper import *
-	target_set = range(2)
+	target_set = range(50)
 	log_entry += "Imagenet "
 
 if not exists("DSBatched"):
@@ -76,10 +76,10 @@ with open(path+"log.txt","w") as log_path:
 	succ=0
 	tot=0
 	print(log_entry)
-	for j in tqdm(target_set[0:50]):
+	for j in tqdm(target_set[50:56]):
 		tot+=1
 		print("\nStarting attack on image", tot, " ", j)
-		ret=deepSearch(cifar_, x_test[j],y_test[j], mymodel,8/256,group_size = grs, max_calls = 5000, batch_size = batch_size, verbose = False, targeted = targeted, target = target)
+		ret=deepSearch(cifar_, x_test[j],y_test[j], mymodel,8/256,group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = False, targeted = targeted, target = target)
 		dump(ret[1].reshape(1,img_x,img_y,3),open(path+"image_"+str(j)+".pkl","wb"))
 		Data[j]=(ret[0],ret[2])
 		if ret[0]:
