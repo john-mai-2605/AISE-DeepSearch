@@ -1,0 +1,301 @@
+Targeted Cifar Undefended 
+
+Starting attack on image 1   6322
+Original class: deer
+  Target class: airplane
+Final class:  deer
+Attack Failed using 5050 queries, success rate is	 0.0
+
+Starting attack on image 2   2600
+Original class: ship
+  Target class: airplane
+Final class:  ship
+Attack Failed using 5050 queries, success rate is	 0.0
+
+Starting attack on image 3   5869
+Original class: horse
+  Target class: airplane
+Final class:  horse
+Attack Failed using 5050 queries, success rate is	 0.0
+
+Starting attack on image 4   7682
+Original class: ship
+  Target class: airplane
+Final class:  ship
+Attack Failed using 5050 queries, success rate is	 0.0
+
+Starting attack on image 5   8764
+Original class: automobile
+  Target class: airplane
+Final class:  automobile
+Attack Failed using 5050 queries, success rate is	 0.0
+
+Starting attack on image 6   8699
+Original class: deer
+  Target class: airplane
+Final class:  truck
+Attack Failed using 5050 queries, success rate is	 0.0
+
+Starting attack on image 7   6932
+Original class: truck
+  Target class: airplane
+Final class:  truck
+Attack Failed using 5050 queries, success rate is	 0.0
+
+Starting attack on image 8   8510
+Original class: horse
+  Target class: airplane
+Final class:  airplane
+Attack Succeeded with 2532 queries, success rate is	 12.5
+
+Starting attack on image 9   9804
+Original class: dog
+  Target class: airplane
+Final class:  dog
+Attack Failed using 5050 queries, success rate is	 11.11111111111111
+
+Starting attack on image 10   1874
+Original class: ship
+  Target class: airplane
+Final class:  ship
+Attack Failed using 5050 queries, success rate is	 10.0
+
+Starting attack on image 11   6009
+Original class: cat
+  Target class: airplane
+Final class:  airplane
+Attack Succeeded with 613 queries, success rate is	 18.181818181818183
+
+Starting attack on image 12   2474
+Original class: frog
+  Target class: airplane
+Final class:  frog
+Attack Failed using 5050 queries, success rate is	 16.666666666666668
+
+Starting attack on image 13   2
+Original class: ship
+  Target class: airplane
+Final class:  ship
+Attack Failed using 5050 queries, success rate is	 15.384615384615385
+
+Starting attack on image 14   8800
+Original class: airplane
+  Target class: airplane
+Final class:  airplane
+Attack Succeeded with 1 queries, success rate is	 21.428571428571427
+
+Starting attack on image 15   3825
+Original class: airplane
+  Target class: airplane
+Final class:  airplane
+Attack Succeeded with 1 queries, success rate is	 26.666666666666668
+
+Starting attack on image 16   3356
+Original class: deer
+  Target class: airplane
+Final class:  deer
+Attack Failed using 5050 queries, success rate is	 25.0
+
+Starting attack on image 17   3597
+Original class: frog
+  Target class: airplane
+Final class:  frog
+Attack Failed using 5050 queries, success rate is	 23.529411764705884
+
+Starting attack on image 18   6343
+Original class: ship
+  Target class: airplane
+Final class:  ship
+Attack Failed using 5050 queries, success rate is	 22.22222222222222
+
+Starting attack on image 19   350
+Original class: truck
+  Target class: airplane
+Final class:  truck
+Attack Failed using 5050 queries, success rate is	 21.05263157894737
+
+Starting attack on image 20   1024
+Original class: cat
+  Target class: airplane
+Final class:  cat
+Attack Failed using 5050 queries, success rate is	 20.0
+
+Starting attack on image 21   9945
+Original class: horse
+  Target class: airplane
+Final class:  horse
+Attack Failed using 5050 queries, success rate is	 19.047619047619047
+
+Starting attack on image 22   2453
+Original class: cat
+  Target class: airplane
+Final class:  cat
+Attack Failed using 5050 queries, success rate is	 18.181818181818183
+
+Starting attack on image 23   6016
+Original class: deer
+  Target class: airplane
+Final class:  deer
+Attack Failed using 5050 queries, success rate is	 17.391304347826086
+
+Starting attack on image 24   6367
+Original class: deer
+  Target class: airplane
+Final class:  deer
+Attack Failed using 5050 queries, success rate is	 16.666666666666668
+
+Starting attack on image 25   4011
+Original class: horse
+  Target class: airplane
+Final class:  horse
+Attack Failed using 5050 queries, success rate is	 16.0
+
+Starting attack on image 26   5126
+Original class: airplane
+  Target class: airplane
+Final class:  airplane
+Attack Succeeded with 1 queries, success rate is	 19.23076923076923
+
+Starting attack on image 27   3263
+Original class: automobile
+  Target class: airplane
+Final class:  automobile
+Attack Failed using 5050 queries, success rate is	 18.51851851851852
+
+Starting attack on image 28   662
+Original class: horse
+  Target class: airplane
+Final class:  horse
+Attack Failed using 5050 queries, success rate is	 17.857142857142858
+
+Starting attack on image 29   1622
+Original class: deer
+  Target class: airplane
+Final class:  dog
+Attack Failed using 5050 queries, success rate is	 17.24137931034483
+
+Starting attack on image 30   9552
+Original class: truck
+  Target class: airplane
+Final class:  truck
+Attack Failed using 5050 queries, success rate is	 16.666666666666668
+
+Starting attack on image 31   1120
+Original class: dog
+  Target class: airplane
+Final class:  bird
+Attack Failed using 5050 queries, success rate is	 16.129032258064516
+
+Starting attack on image 32   9088
+Original class: bird
+  Target class: airplane
+Final class:  bird
+Attack Failed using 5050 queries, success rate is	 15.625
+
+Starting attack on image 33   4344
+Original class: deer
+  Target class: airplane
+Final class:  deer
+Attack Failed using 5050 queries, success rate is	 15.151515151515152
+
+Starting attack on image 34   2836
+Original class: cat
+  Target class: airplane
+Final class:  cat
+Attack Failed using 5050 queries, success rate is	 14.705882352941176
+
+Starting attack on image 35   2476
+Original class: ship
+  Target class: airplane
+Final class:  ship
+Attack Failed using 5050 queries, success rate is	 14.285714285714286
+
+Starting attack on image 36   2019
+Original class: truck
+  Target class: airplane
+Final class:  airplane
+Attack Succeeded with 762 queries, success rate is	 16.666666666666668
+
+Starting attack on image 37   7342
+Original class: horse
+  Target class: airplane
+Final class:  horse
+Attack Failed using 5050 queries, success rate is	 16.216216216216218
+
+Starting attack on image 38   2076
+Original class: cat
+  Target class: airplane
+Final class:  cat
+Attack Failed using 5050 queries, success rate is	 15.789473684210526
+
+Starting attack on image 39   3003
+Original class: bird
+  Target class: airplane
+Final class:  bird
+Attack Failed using 5050 queries, success rate is	 15.384615384615385
+
+Starting attack on image 40   2006
+Original class: horse
+  Target class: airplane
+Final class:  airplane
+Attack Succeeded with 646 queries, success rate is	 17.5
+
+Starting attack on image 41   6624
+Original class: deer
+  Target class: airplane
+Final class:  airplane
+Attack Succeeded with 1915 queries, success rate is	 19.51219512195122
+
+Starting attack on image 42   722
+Original class: ship
+  Target class: airplane
+Final class:  ship
+Attack Failed using 5050 queries, success rate is	 19.047619047619047
+
+Starting attack on image 43   1276
+Original class: dog
+  Target class: airplane
+Final class:  dog
+Attack Failed using 5050 queries, success rate is	 18.6046511627907
+
+Starting attack on image 44   3970
+Original class: truck
+  Target class: airplane
+Final class:  truck
+Attack Failed using 5050 queries, success rate is	 18.181818181818183
+
+Starting attack on image 45   9432
+Original class: automobile
+  Target class: airplane
+Final class:  automobile
+Attack Failed using 5050 queries, success rate is	 17.77777777777778
+
+Starting attack on image 46   492
+Original class: ship
+  Target class: airplane
+Final class:  ship
+Attack Failed using 5050 queries, success rate is	 17.391304347826086
+
+Starting attack on image 47   4169
+Original class: cat
+  Target class: airplane
+Final class:  dog
+Attack Failed using 5050 queries, success rate is	 17.02127659574468
+
+Starting attack on image 48   9884
+Original class: truck
+  Target class: airplane
+Final class:  truck
+Attack Failed using 5050 queries, success rate is	 16.666666666666668
+
+Starting attack on image 49   8817
+Original class: deer
+  Target class: airplane
+Final class:  deer
+Attack Failed using 5050 queries, success rate is	 16.3265306122449
+
+Starting attack on image 50   8369
+Original class: deer
+  Target class: airplane
+Final class:  deer
+Attack Failed using 5050 queries, success rate is	 16.0
