@@ -16,17 +16,29 @@ class Evaluator:
 	def idx2name(self,class_index):
 		return(self.classes[class_index])
 		
-	def evaluate(self, image):
-		self.evaluation_count +=1
+	def evaluate(self, image, proba = True):
 		shape = (1,) + image.shape
-		#started_time = time.process_time()
-		prediction = self.model.predict(np.reshape(image,shape))
-		#print(time.process_time() - started_time)
-		return prediction.reshape(-1)
+		if proba:
+			self.evaluation_count +=1
+			#started_time = time.process_time()
+			prediction = self.model.predict_proba(np.reshape(image,shape))
+			#print(time.process_time() - started_time)
+			return prediction.reshape(-1)
+		else:
+			predictions = np.array([])
+			img = np.reshape(image,shape)
+			for i in range(100):
+				self.evaluation_count +=1
+				pred = self.model.predict(img + np.random.normal(0, 30, shape), False)
+				pred = pred.reshape(-1)
+				predictions = np.vstack((predictions, pred))
+				prediction = np.mean(predictions, axis = 0)
+				print(prediction)
+			return prediction
 		
-	def relative_evaluate(self, image, class_number):
+	def relative_evaluate(self, image, class_number, proba = True):
 		
-		new_probability = self.evaluate(image)
+		new_probability = self.evaluate(image, proba)
 		class_prob = new_probability[class_number] 
 		
 		relative_score = class_prob - new_probability
@@ -38,7 +50,7 @@ class Evaluator:
 	def targeted_evaluate(self, image, target):
 		prob = self.evaluate(image)
 		if np.argmax(prob) == target:
-			return -1
+			return -prob
 		return 1/prob
 
 	def decide_direction(self, original_probability, mutated_probability):
