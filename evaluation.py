@@ -20,17 +20,26 @@ class Evaluator:
 			return(cifar_names[class_index])
 		return(self.classes[class_index])
 		
-	def evaluate(self, image):
-		self.evaluation_count +=1
+	def evaluate(self, image, proba = True):
 		shape = (1,) + image.shape
-		#started_time = time.process_time()
-		prediction = self.model.predict(np.reshape(image,shape))
-		#print(time.process_time() - started_time)
-		return prediction.reshape(-1)
+		if proba:
+			self.evaluation_count +=1
+			#started_time = time.process_time()
+			prediction = self.model.predict(np.reshape(image,shape))
+			#print(time.process_time() - started_time)
+			return prediction.reshape(-1)
+		else:
+			predictions = np.array([])
+			img = np.reshape(image,shape)
+			predictions = [self.model.predict(img + np.random.normal(0, 30, shape), False).reshape(-1).tolist() for i in range(100)]
+			self.evaluation_count +=100
+			predictions = np.array(predictions)
+			prediction = np.mean(predictions, axis = 0)
+			return prediction
 		
-	def relative_evaluate(self, image, class_number):
+	def relative_evaluate(self, image, class_number, proba = True):
 		
-		new_probability = self.evaluate(image)
+		new_probability = self.evaluate(image, proba)
 		class_prob = new_probability[class_number] 
 		
 		relative_score = class_prob - new_probability

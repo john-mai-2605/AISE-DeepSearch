@@ -28,10 +28,12 @@ parser.add_argument('--targeted', type=int, default=0, choices = [0,1], help="Ta
 parser.add_argument('--target', type=int, default=0, help="Tartgeted class (applicable for targeted attack)")
 parser.add_argument('--cifar', action ='store_true', default=False, help="turn on for cifar")
 parser.add_argument('--undef', action ='store_true', default=False, help="turn on for undefended")
+parser.add_argument('--proba', type=int, default=1, choices=[0,1], help="Output from model is probability (1, default) or class (0)")
+
 
 # Read the argument
 args = parser.parse_args()
-targeted = args.targeted
+targeted = args.targeted == 1
 target = args.target
 undefended = args.undef
 cifar_ = args.cifar
@@ -40,6 +42,8 @@ log_entry = ""
 img_x, img_y = 256, 256
 grs= 32
 batch_size = 64
+proba = args.proba == 1
+
 
 if targeted:
 	print(f'Targeted attack with target of class @{target}')
@@ -81,7 +85,7 @@ with open(path+"log.txt","w") as log_path:
 	for j in tqdm(target_set[:50]):
 		tot+=1
 		print("\nStarting attack on image", tot, " ", j)
-		ret=deepSearch(cifar_, x_test[j],y_test[j], mymodel,8/256,group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = False, targeted = targeted, target = target)
+		ret=deepSearch(cifar_, x_test[j],y_test[j], mymodel,8/256,group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = False, targeted = targeted, target = target, proba = proba)
 		dump(ret[1].reshape(1,img_x,img_y,3),open(path+"image_"+str(j)+".pkl","wb"))
 		Data[j]=(ret[0],ret[2])
 		if ret[0]:
