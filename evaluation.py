@@ -3,17 +3,21 @@ import time
 import json
 
 class Evaluator:
-	def __init__(self, model, max_count):
+	def __init__(self, model, max_count, cifar_):
 		self.evaluation_count = 0
 		self.model = model
 		self.max_count = max_count
 		self.classes = json.load(open("classes.json","r"))
 		self.classes = {int(k):v for k,v in self.classes.items()}
+		self.cifar_ = cifar_
 		
 	def current_class(self,image):
 		return(np.argmax(self.evaluate(image)))
 		
 	def idx2name(self,class_index):
+		cifar_names = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
+		if self.cifar_:
+			return(cifar_names[class_index])
 		return(self.classes[class_index])
 		
 	def evaluate(self, image, proba = True):
