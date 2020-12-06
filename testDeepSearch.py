@@ -58,7 +58,7 @@ if cifar_:
 		target_set=load(open("def_indices.pkl","rb"))
 		log_entry += "Defended "
 	img_x, img_y = 32,32
-	grs = 8
+	grs = 4
 	batch_size = 64
 else:
 	from imgntWrapper import *
@@ -70,13 +70,15 @@ if not exists("DSBatched"):
 path="DSBatched/"+str(datetime.now()).replace(":","_")+"/"
 mkdir(path)
 with open(path+"log.txt","w") as log_path:
+	
 	sys.stdout=log_path
 	loss=False
 	Data={}
 	succ=0
 	tot=0
+	print("group_size ",grs," batch_size ", batch_size)
 	print(log_entry)
-	for j in tqdm(target_set[50:56]):
+	for j in tqdm(target_set[:50]):
 		tot+=1
 		print("\nStarting attack on image", tot, " ", j)
 		ret=deepSearch(cifar_, x_test[j],y_test[j], mymodel,8/256,group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = False, targeted = targeted, target = target)
