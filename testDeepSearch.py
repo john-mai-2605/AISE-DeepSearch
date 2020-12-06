@@ -74,18 +74,18 @@ if not exists("DSBatched"):
 path="DSBatched/"+str(datetime.now()).replace(":","_")+"/"
 mkdir(path)
 with open(path+"log.txt","w") as log_path:
-	
-	sys.stdout=log_path
+	#sys.stdout=log_path
 	loss=False
 	Data={}
 	succ=0
 	tot=0
 	print("group_size ",grs," batch_size ", batch_size)
 	print(log_entry)
-	for j in tqdm(target_set[:50]):
+	t=target_set
+	for j in tqdm([t[4],t[5],t[8],t[19],t[36]]):
 		tot+=1
 		print("\nStarting attack on image", tot, " ", j)
-		ret=deepSearch(cifar_, x_test[j],y_test[j], mymodel,8/256,group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = False, targeted = targeted, target = target, proba = proba)
+		ret=deepSearch(cifar_, x_test[j],y_test[j], mymodel,8/256,group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = True, targeted = targeted, target = target, proba = proba)
 		dump(ret[1].reshape(1,img_x,img_y,3),open(path+"image_"+str(j)+".pkl","wb"))
 		Data[j]=(ret[0],ret[2])
 		if ret[0]:

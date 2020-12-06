@@ -48,7 +48,7 @@ def deepSearch(cifar_, image, label, model, distortion_cap, group_size= 16, max_
 				# Line 7
 				target_class = np.argmin(rel_eval(current_image))
 				# Line 8
-				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, targeted, target_class, e ,verbose)
+				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, targeted, target_class, e , proba, verbose)
 				# If nothing changed, change the grouping
 				if True:#np.product(current_image == mutated_image):
 					regroup = True
@@ -72,7 +72,7 @@ def deepSearch(cifar_, image, label, model, distortion_cap, group_size= 16, max_
 				# Line 7
 				target_class = target
 				# Line 8
-				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, targeted, target, e, verbose)
+				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, targeted, target, e, proba, verbose)
 				# If nothing changed, change the grouping
 				if np.product(current_image == mutated_image):
 					regroup = True
@@ -89,7 +89,7 @@ def deepSearch(cifar_, image, label, model, distortion_cap, group_size= 16, max_
 		
 			
 
-def approx_min(image, lower, upper, rel_eval, grouping, batch_size, targeted,  target_class, e, verbose):
+def approx_min(image, lower, upper, rel_eval, grouping, batch_size, targeted,  target_class, e, proba, verbose):
 	number_of_groups = len(grouping)
 	ch = 0
 	is_color = len(np.shape(image)) == 3
@@ -129,9 +129,9 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, targeted,  t
 			l_target_score = lower_score[target_class]
 			# If adversarial input is found during exploration,
 			# Stop there
-			if u_target_score < 0:
+			if u_target_score < 0 and proba:
 				return(upper_exploratory)
-			if l_target_score < 0:
+			if l_target_score < 0 and proba:
 				return(lower_exploratory)
 			dir = u_target_score < l_target_score
 			if u_target_score == l_target_score:

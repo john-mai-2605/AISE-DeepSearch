@@ -32,8 +32,14 @@ class CompatModel:
         saver.restore(self.sess, model_file)
         self.model=model
         self.calls=0
-    def predict(self,images):
+    def predict(self,images,proba = True):
         self.calls+=images.shape[0]
         res=np.exp(self.sess.run(self.model.pre_softmax,feed_dict={self.model.x_input:images*255,self.model.y_input:[1]}))
-        return res/np.sum(res,axis=1).reshape(-1,1)
+        if proba:
+            return res/np.sum(res,axis=1).reshape(-1,1)
+        else:
+            c = np.argmax(res/np.sum(res,axis=1).reshape(-1,1))
+            output = np.zeros(10)
+            output[c] = 1
+            return output
 mymodel=CompatModel("model_undefended/")

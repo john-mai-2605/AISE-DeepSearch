@@ -31,8 +31,8 @@ class Evaluator:
 		else:
 			predictions = np.array([])
 			img = np.reshape(image,shape)
-			predictions = [self.model.predict(img + np.random.normal(0, 30, shape), False).reshape(-1).tolist() for i in range(100)]
-			self.evaluation_count +=100
+			predictions = [self.model.predict(img + np.random.normal(0, 30, shape), False).reshape(-1).tolist() for i in range(50)]
+			self.evaluation_count +=50
 			predictions = np.array(predictions)
 			prediction = np.mean(predictions, axis = 0)
 			return prediction
