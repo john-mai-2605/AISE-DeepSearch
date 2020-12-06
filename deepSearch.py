@@ -60,7 +60,7 @@ def deepSearch(cifar_, image, label, model, distortion_cap, group_size= 16, max_
 		success = not current_class == original_class
 	else:
 		print("  Target class: {}".format(e.idx2name(target)))
-		rel_eval = lambda image :e.targeted_evaluate(image, target)
+		rel_eval = lambda image :e.targeted_evaluate(image, target, proba)
 		while current_class!=target and e.evaluation_count < max_calls:
 			# Algorithm 2: line 2 
 			grouping = group_generation(img_size, group_size, options = "square")

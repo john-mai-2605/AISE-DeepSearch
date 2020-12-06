@@ -35,11 +35,6 @@ class CompatModel:
     def predict(self,images,proba = True):
         self.calls+=images.shape[0]
         res=np.exp(self.sess.run(self.model.pre_softmax,feed_dict={self.model.x_input:images*255,self.model.y_input:[1]}))
-        if proba:
-            return res/np.sum(res,axis=1).reshape(-1,1)
-        else:
-            c = np.argmax(res/np.sum(res,axis=1).reshape(-1,1))
-            output = np.zeros(10)
-            output[c] = 1
-            return output
+        return res/np.sum(res,axis=1).reshape(-1,1)
+		
 mymodel=CompatModel("model_undefended/")

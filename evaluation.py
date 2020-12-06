@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 import time
 import json
 
@@ -31,7 +32,12 @@ class Evaluator:
 		else:
 			predictions = np.array([])
 			img = np.reshape(image,shape)
-			predictions = [self.model.predict(img + np.random.normal(0, 30, shape), False).reshape(-1).tolist() for i in range(50)]
+			predictions = [
+				self.top_rank(
+					self.model.predict(
+						img + np.random.normal(0, 14/256, shape)
+					)[0]
+				).reshape(-1).tolist() for i in range(50)]
 			self.evaluation_count +=50
 			predictions = np.array(predictions)
 			prediction = np.mean(predictions, axis = 0)
@@ -48,11 +54,21 @@ class Evaluator:
 		relative_score[class_number] = 1
 		return relative_score
 
-	def targeted_evaluate(self, image, target):
-		prob = self.evaluate(image)
+	def targeted_evaluate(self, image, target, proba = True):
+		prob = self.evaluate(image, proba)
 		if np.argmax(prob) == target:
 			return -prob
 		return 1/prob
 
-	def decide_direction(self, original_probability, mutated_probability):
-		pass
+	def top_rank(self, array_, top_number = 3):
+		# with help from
+		# https://stackoverflow.com/questions/5284646/rank-items-in-an-array-using-python-numpy-without-sorting-array-twice/5284703#5284703
+		temp = array_.argsort()
+		ranks = np.empty_like(temp)
+		ranks[temp] = np.arange(len(array_))
+		# ^ ranks is rank of array_, higher number gets higher rank
+		ranks = ranks - (len(ranks) - top_number) + 1
+		cutout = ranks < 0
+		ranks[cutout] = 0
+		return 2 * ranks/(top_number**2 + top_number)
+		
