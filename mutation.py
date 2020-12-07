@@ -22,7 +22,7 @@ def group_generation(size = (3,3), group_size = 2, options = ""):
 	groups will be cropped."""
 	"""
 	idea behind the implementation is:
-	1. Fill the pixels with sequential indexes
+	1. Fill the pixels with sequential indices
 	2. Slice and return the slices.
 	
 	Channel invariant
@@ -56,6 +56,18 @@ def group_generation(size = (3,3), group_size = 2, options = ""):
 		return np.array([[i] for i in range(size_x*size_y)])
 		
 def read_direction(image,lower,upper,grouping):
+	"""
+	image: mutated image (If there are unmutated spots, it will be registered as lower)
+	lower/upper: lower/upper bounded images. 
+				go to create_boundary_palette() for more detail.
+	grouping: list of indices grouped.
+				go to group_generation() for more detail.
+	
+	Given an image and it's lower/upper pair, 
+	this method returns direction array (Upper or Lower: T ro F).
+	
+	Single channel (grayscale) images are yet to be implemented.
+	"""
 	number_of_groups = len(grouping)
 	is_color = len(np.shape(image)) == 3
 	image = np.reshape(image,-1)
@@ -66,12 +78,12 @@ def read_direction(image,lower,upper,grouping):
 		direction_array = np.zeros(number_of_groups, dtype = bool)
 		
 	if is_color:
-		i = 0
+		group_index = 0
 		for group in grouping:
 			for ch in range(3):
-				yo = np.product(image[group*3+ch] == upper[group*3+ch])
-				direction_array[i,ch] = yo
-			i += 1
+				group_is_upper_bounded = np.product(image[group*3+ch] == upper[group*3+ch])
+				direction_array[group_index,ch] = group_is_upper_bounded
+			group_index += 1
 	return direction_array
 	
 def create_boundary_palette(image, distortion_cap):
