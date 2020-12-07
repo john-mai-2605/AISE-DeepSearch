@@ -48,7 +48,7 @@ def deepSearch(cifar_, image, label, model, distortion_cap, group_size= 16, max_
 				# Line 7
 				target_class = np.argmin(rel_eval(current_image))
 				# Line 8
-				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, targeted, target_class, e ,verbose)
+				mutated_image = approx_min(current_image, lower, upper, rel_eval, grouping, batch_size, targeted, target_class, e, verbose)
 				# If nothing changed, change the grouping
 				if True:#np.product(current_image == mutated_image):
 					regroup = True
@@ -60,7 +60,7 @@ def deepSearch(cifar_, image, label, model, distortion_cap, group_size= 16, max_
 		success = not current_class == original_class
 	else:
 		print("  Target class: {}".format(e.idx2name(target)))
-		rel_eval = lambda image :e.targeted_evaluate(image, target)
+		rel_eval = lambda image :e.targeted_evaluate(image, target, proba)
 		while current_class!=target and e.evaluation_count < max_calls:
 			# Algorithm 2: line 2 
 			grouping = group_generation(img_size, group_size, options = "square")

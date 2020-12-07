@@ -74,7 +74,6 @@ if not exists("DSBatched"):
 path="DSBatched/"+str(datetime.now()).replace(":","_")+"/"
 mkdir(path)
 with open(path+"log.txt","w") as log_path:
-	
 	sys.stdout=log_path
 	loss=False
 	Data={}
