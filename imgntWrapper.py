@@ -32,7 +32,7 @@ class CompatModel:
         self.model.cpu()
         self.model.eval()
         self.calls=0
-    def predict(self,images,proba=True):
+    def predict(self,images):
         #start_time = time.process_time()
         self.calls+=images.shape[0]
         with torch.no_grad():
