@@ -1,5 +1,4 @@
 import os
-import pickle
 import matplotlib.pyplot as plt
 import librosa
 import numpy as np
