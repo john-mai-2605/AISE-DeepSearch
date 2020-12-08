@@ -56,7 +56,7 @@ import matplotlib.pyplot as plt
 from os import walk
 import os
 
-cat_wavs, dog_wavs, parrot_wavs, human+wavs, kid_wavs = ([] for i in range(5))
+cat_wavs, dog_wavs, parrot_wavs, human_wavs, kid_wavs = ([] for i in range(5))
 for (_,_,filenames) in walk(root+'/cat'):
     cat_wavs.extend(filenames)
     break
