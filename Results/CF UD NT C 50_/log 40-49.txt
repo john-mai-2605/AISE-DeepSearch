@@ -1,0 +1,52 @@
+group_size  4  batch_size  64
+Non-targeted Cifar Undefended 
+
+Starting attack on image 0   6624
+Original class: deer
+Final class:  deer
+Attack Failed using 13303 queries, success rate is	 0.0
+
+Starting attack on image 1   722
+Original class: ship
+Final class:  ship
+Attack Failed using 13303 queries, success rate is	 0.0
+
+Starting attack on image 2   1276
+Original class: dog
+Final class:  dog
+Attack Failed using 10118 queries, success rate is	 0.0
+
+Starting attack on image 3   3970
+Original class: truck
+Final class:  truck
+Attack Failed using 13303 queries, success rate is	 0.0
+
+Starting attack on image 4   9432
+Original class: automobile
+Final class:  automobile
+Attack Failed using 13303 queries, success rate is	 0.0
+
+Starting attack on image 5   492
+Original class: ship
+Final class:  ship
+Attack Failed using 10544 queries, success rate is	 0.0
+
+Starting attack on image 6   4169
+Original class: cat
+Final class:  dog
+Attack Succeeded with 6652 queries, success rate is	 14.285714285714286
+
+Starting attack on image 7   9884
+Original class: truck
+Final class:  truck
+Attack Failed using 11262 queries, success rate is	 12.5
+
+Starting attack on image 8   8817
+Original class: deer
+Final class:  deer
+Attack Failed using 10046 queries, success rate is	 11.11111111111111
+
+Starting attack on image 9   8369
+Original class: deer
+Final class:  deer
+Attack Failed using 10114 queries, success rate is	 10.0

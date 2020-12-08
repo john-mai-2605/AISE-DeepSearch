@@ -1,0 +1,52 @@
+group_size  4  batch_size  64
+Non-targeted Cifar Undefended 
+
+Starting attack on image 0   6009
+Original class: cat
+Final class:  cat
+Attack Failed using 10118 queries, success rate is	 0.0
+
+Starting attack on image 1   2474
+Original class: frog
+Final class:  frog
+Attack Failed using 13303 queries, success rate is	 0.0
+
+Starting attack on image 2   2
+Original class: ship
+Final class:  ship
+Attack Failed using 10379 queries, success rate is	 0.0
+
+Starting attack on image 3   8800
+Original class: airplane
+Final class:  airplane
+Attack Failed using 10118 queries, success rate is	 0.0
+
+Starting attack on image 4   3825
+Original class: airplane
+Final class:  airplane
+Attack Failed using 10118 queries, success rate is	 0.0
+
+Starting attack on image 5   3356
+Original class: deer
+Final class:  deer
+Attack Failed using 10046 queries, success rate is	 0.0
+
+Starting attack on image 6   3597
+Original class: frog
+Final class:  frog
+Attack Failed using 13303 queries, success rate is	 0.0
+
+Starting attack on image 7   6343
+Original class: ship
+Final class:  ship
+Attack Failed using 13303 queries, success rate is	 0.0
+
+Starting attack on image 8   350
+Original class: truck
+Final class:  truck
+Attack Failed using 13303 queries, success rate is	 0.0
+
+Starting attack on image 9   1024
+Original class: cat
+Final class:  cat
+Attack Failed using 10118 queries, success rate is	 0.0
