@@ -2,3 +2,17 @@ __pycache__/
 DSBatched/
 checkpoint-70000.data-00000-of-00001
 checkpoint-79000.data-00000-of-00001
+__pycache__/
+DSBatched/
+checkpoint-70000.data-00000-of-00001
+checkpoint-79000.data-00000-of-00001
+/audios/cat/
+/audios/dog/
+/audios/human/
+/audios/kid/
+/audios/parrot/
+/audio_classifier/intermediary/dog/
+/audio_classifier/intermediary/cat/
+/audio_classifier/intermediary/kid/
+/audio_classifier/intermediary/human/
+/audio_classifier/intermediary/parrot/
