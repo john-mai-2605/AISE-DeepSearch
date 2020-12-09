@@ -39,7 +39,7 @@ class CompatModel:
         ############################################################
         self.model = resnet50()
         self.model.fc = torch.nn.Linear(self.model.fc.in_features, 5) 
-        self.model.load_state_dict(torch.load('./audio_classifier/best_model_resnet50.pt'))         
+        self.model.load_state_dict(torch.load('./audio_classifier/model_spectrogram_resnet50.pt'))
         ############################################################
         self.model.cuda()
         self.model.eval()
@@ -70,17 +70,17 @@ def read_wave(wav, label):
     plt.close()
     pil_image = Image.open(save_path)   
     image = np.array(pil_image)
-    print(image.max())
     return image[:,:,:3]
 
-classes = ['dog'] # add more in the correct order of class 0, 1, ...
-inds=[360]
+classes = ["Cat", "dog", "parrot", "human", "kid"] # add more in the correct order of class 0, 1, ...
+inds = range(1,3)
 
-
+x_test=[]
+y_test=[]
 if INDICES=="":
   for j, label in enumerate(classes):
-    x_test = [(read_wave(i, label) + 0.5)/256 for i in inds]
-    y_test = j*np.ones(len(x_test),dtype="int32")
+    x_test += [(read_wave(i, label) + 0.5)/256 for i in inds]
+    y_test += (j*np.ones(len(inds),dtype="int32")).tolist()
 if INDICES=="ALL":
   for j, label in enumerate(classes):
     x_test.append(np.stack([read_wave(i, label) for i in tqdm(range(100))]).tolist())

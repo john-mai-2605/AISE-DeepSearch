@@ -7,7 +7,7 @@ import os
 import random
 #os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
-def deepSearch(cifar_, image, label, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None, proba = True):
+def deepSearch(cifar_, spectro_, image, label, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None, proba = True):
 	"""
 	cifar_: A boolean value. Whether we are using a CIFAR model or not (using Imgnt)
 	image: The image to adverse one
@@ -27,7 +27,7 @@ def deepSearch(cifar_, image, label, model, distortion_cap, group_size= 16, max_
 		initailization, evaluation function, (re)grouping, checking success/query-budget
 	"""
 	# You may skip initial part
-	e = Evaluator(model, max_calls, cifar_)
+	e = Evaluator(model, max_calls, cifar_, spectro_)
 	original_probability = e.evaluate(image)
 	original_class = label
 	print("Original class: {}".format(e.idx2name(original_class)))
@@ -47,7 +47,7 @@ def deepSearch(cifar_, image, label, model, distortion_cap, group_size= 16, max_
 	rel_eval = lambda image : e.relative_evaluate(image, original_class, proba)
 	
 	# Initialize before loop
-	current_class = original_class
+	current_class = np.argmax(current_class_prob)
 	# Push image to lower bound
 	grouping = group_generation(img_size, group_size, options = "square")
 	current_image = image_mutate(image, grouping, lower, lower)
