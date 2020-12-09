@@ -97,7 +97,7 @@ with open(path+"log.txt","w") as log_path:
 		ret = deepSearch(cifar_, x_test[j], y_test[j], mymodel, 8/256, 
 			group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = False, 
 			targeted = targeted, target = target, proba = proba)
-		dump(ret[1].reshape(1,img_x,img_y,3),open(path+"image_"+"{:03d}".format(j)+".pkl","wb"))
+		dump(ret[1].reshape(1,img_x,img_y,3),open(path+"image_"+"{:05d}".format(j)+".pkl","wb"))
 		Data[j]=(ret[0],ret[2])
 		if ret[0]:
 			succ+=1
