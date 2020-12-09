@@ -35,7 +35,7 @@ class CompatModel:
     def __init__(self):
         ############################################################
         self.model=alexnet()
-        self.model.classifier[6] = torch.nn.Linear(model.classifier[6].in_features, 2) 
+        self.model.classifier[6] = torch.nn.Linear(self.model.classifier[6].in_features, 2) 
         self.model.load_state_dict(torch.jit.load('./audio_classifier/best_model.pt'))
         ############################################################
         self.model.cpu()
@@ -50,7 +50,7 @@ class CompatModel:
             res=torch.nn.functional.softmax(res,dim=1)
         return res.cpu().detach().numpy()
         
-mymodel=CompatModel()
+#mymodel=CompatModel()
 
 def read_wave(wav, label):
     path = AUDDIR + label + "/" + str(wav) + ".wav"
