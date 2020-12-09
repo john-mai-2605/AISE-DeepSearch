@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import time
 import os
 import random
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+#os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 def deepSearch(cifar_, image, label, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None, proba = True):
 	"""

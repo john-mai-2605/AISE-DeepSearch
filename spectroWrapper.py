@@ -21,6 +21,8 @@ import time
 from scipy.io.wavfile import read
 from scipy import signal
 import matplotlib.pyplot as plt
+from matplotlib import cm
+
 
 transform = transforms.Compose([
       # transforms.ColorJitter(0.1, 0.1, 0.1, 0.1),
@@ -37,20 +39,22 @@ class CompatModel:
         ############################################################
         self.model = resnet50()
         self.model.fc = torch.nn.Linear(self.model.fc.in_features, 5) 
-        self.model.load_state_dict(torch.jit.load('./audio_classifier/best_model_resnet50.pt'))         
+        self.model.load_state_dict(torch.load('./audio_classifier/best_model_resnet50.pt'))         
         ############################################################
-        self.model.cpu()
+        self.model.cuda()
         self.model.eval()
         self.calls=0
     def predict(self, images):
-        self.calls+=images.shape[0]
+        self.calls+=1
+        images = np.reshape(images, images.shape[1:])
         with torch.no_grad():
-            t_images = transform(images).cpu()             
-            res=self.model(t_images)
+            images = Image.fromarray(np.uint8(images[:,:,:3] * 256 - 0.5))
+            t_images = transform(images).cuda()             
+            res=self.model(t_images[None, ...].float())
             res=torch.nn.functional.softmax(res,dim=1)
         return res.cpu().detach().numpy()
         
-#mymodel=CompatModel()
+mymodel=CompatModel()
 
 def read_wave(wav, label):
     path = AUDDIR + label + "/" + str(wav) + ".wav"
@@ -60,20 +64,23 @@ def read_wave(wav, label):
     f, t, Sxx = signal.spectrogram((np.mean(audio, axis=1)), sr, scaling='spectrum')
     plt.pcolormesh(t, f, np.log10(Sxx))
     save_path = './audio_classifier/intermediary/' + label + "/" + str(wav) + '.png'
-    plt.savefig(save_path)
+    plt.axis("off")
+    plt.savefig(save_path, pad_inches = 0, bbox_inches = "tight")
+    #plt.savefig(save_path)
     plt.close()
-    return Image.open(save_path)   
+    pil_image = Image.open(save_path)   
+    image = np.array(pil_image)
+    print(image.max())
+    return image[:,:,:3]
 
 classes = ['dog'] # add more in the correct order of class 0, 1, ...
 inds=[360]
 
-x_test = []
-y_test = []
 
 if INDICES=="":
   for j, label in enumerate(classes):
-    x_test.append(np.stack([read_wave(i, label) for i in inds]).tolist())
-    y_test.append(j*np.ones(len(x_test)).tolist())
+    x_test = [(read_wave(i, label) + 0.5)/256 for i in inds]
+    y_test = j*np.ones(len(x_test),dtype="int32")
 if INDICES=="ALL":
   for j, label in enumerate(classes):
     x_test.append(np.stack([read_wave(i, label) for i in tqdm(range(100))]).tolist())
