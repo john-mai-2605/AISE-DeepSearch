@@ -19,6 +19,7 @@ from tqdm import tqdm
 import numpy as np
 import time
 from scipy.io.wavfile import read
+from scipy import signal
 import matplotlib.pyplot as plt
 
 transform = transforms.Compose([
@@ -34,15 +35,14 @@ INDICES=""
 class CompatModel:
     def __init__(self):
         ############################################################
-        self.model=alexnet()
-        self.model.classifier[6] = torch.nn.Linear(model.classifier[6].in_features, 2) 
-        self.model.load_state_dict(torch.jit.load('./audio_classifier/best_model.pt'))
+        self.model = resnet50()
+        self.model.fc = torch.nn.Linear(self.model.fc.in_features, 5) 
+        self.model.load_state_dict(torch.jit.load('./audio_classifier/best_model_resnet50.pt'))         
         ############################################################
         self.model.cpu()
         self.model.eval()
         self.calls=0
-    def predict(self, wavs):
-        images = sig2plot(wavs)
+    def predict(self, images):
         self.calls+=images.shape[0]
         with torch.no_grad():
             t_images = transform(images).cpu()             
@@ -50,19 +50,19 @@ class CompatModel:
             res=torch.nn.functional.softmax(res,dim=1)
         return res.cpu().detach().numpy()
         
-mymodel=CompatModel()
+#mymodel=CompatModel()
 
 def read_wave(wav, label):
     path = AUDDIR + label + "/" + str(wav) + ".wav"
     input_data = read(path)
     audio = input_data[1]
-    return audio
-
-def sig2plot(audio):
-    plt.plot(audio)
-    plt.savefig('./audio_classifier/intermediary/plot.png')
+    sr = input_data[0]
+    f, t, Sxx = signal.spectrogram((np.mean(audio, axis=1)), sr, scaling='spectrum')
+    plt.pcolormesh(t, f, np.log10(Sxx))
+    save_path = './audio_classifier/intermediary/' + label + "/" + str(wav) + '.png'
+    plt.savefig(save_path)
     plt.close()
-    return Image.open('./audio_classifier/intermediary/plot.png')
+    return Image.open(save_path)   
 
 classes = ['dog'] # add more in the correct order of class 0, 1, ...
 inds=[360]
