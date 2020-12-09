@@ -32,7 +32,7 @@ class CompatModel:
         self.model.cpu()
         self.model.eval()
         self.calls=0
-    def predict(self,images,proba=True):
+    def predict(self,images):
         #start_time = time.process_time()
         self.calls+=images.shape[0]
         with torch.no_grad():
@@ -41,13 +41,8 @@ class CompatModel:
             res=self.model(t_images)
             res=torch.nn.functional.softmax(res,dim=1)
         #print("{:.3f}".format(time.process_time()-start_time))
-        if proba:
-            return res.cpu().detach().numpy()
-        else:
-            c = torch.argmax(res).cpu().detach().numpy()
-            output = torch.zeros(1000)
-            output[c] = 1
-            return output
+        return res.cpu().detach().numpy()
+        
 mymodel=CompatModel()
 
 def load_image(id):

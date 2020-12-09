@@ -1,0 +1,122 @@
+group_size  32  batch_size  64
+Targeted Imagenet 
+
+Starting attack on image 1   0
+Original class: tench, Tinca tinca
+  Target class: street sign
+Final class:  barracouta, snoek
+Attack Failed using 10045 queries, success rate is	 0.0
+
+Starting attack on image 2   1
+Original class: goldfish, Carassius auratus
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 4654 queries, success rate is	 50.0
+
+Starting attack on image 3   2
+Original class: great white shark, white shark, man-eater, man-eating shark, Carcharodon carcharias
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 7999 queries, success rate is	 66.66666666666667
+
+Starting attack on image 4   3
+Original class: tiger shark, Galeocerdo cuvieri
+  Target class: street sign
+Final class:  tiger shark, Galeocerdo cuvieri
+Attack Failed using 10045 queries, success rate is	 50.0
+
+Starting attack on image 5   4
+Original class: hammerhead, hammerhead shark
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 9253 queries, success rate is	 60.0
+
+Starting attack on image 6   5
+Original class: electric ray, crampfish, numbfish, torpedo
+  Target class: street sign
+Final class:  electric ray, crampfish, numbfish, torpedo
+Attack Failed using 10045 queries, success rate is	 50.0
+
+Starting attack on image 7   6
+Original class: stingray
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 6550 queries, success rate is	 57.142857142857146
+
+Starting attack on image 8   7
+Original class: cock
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 6943 queries, success rate is	 62.5
+
+Starting attack on image 9   8
+Original class: hen
+  Target class: street sign
+Final class:  hen
+Attack Failed using 10045 queries, success rate is	 55.55555555555556
+
+Starting attack on image 10   9
+Original class: ostrich, Struthio camelus
+  Target class: street sign
+Final class:  ostrich, Struthio camelus
+Attack Failed using 10045 queries, success rate is	 50.0
+
+Starting attack on image 11   10
+Original class: brambling, Fringilla montifringilla
+  Target class: street sign
+Final class:  brambling, Fringilla montifringilla
+Attack Failed using 10045 queries, success rate is	 45.45454545454545
+
+Starting attack on image 12   11
+Original class: goldfinch, Carduelis carduelis
+  Target class: street sign
+Final class:  goldfinch, Carduelis carduelis
+Attack Failed using 10045 queries, success rate is	 41.666666666666664
+
+Starting attack on image 13   12
+Original class: house finch, linnet, Carpodacus mexicanus
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 3475 queries, success rate is	 46.15384615384615
+
+Starting attack on image 14   13
+Original class: junco, snowbird
+  Target class: street sign
+Final class:  junco, snowbird
+Attack Failed using 10045 queries, success rate is	 42.857142857142854
+
+Starting attack on image 15   14
+Original class: indigo bunting, indigo finch, indigo bird, Passerina cyanea
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 3476 queries, success rate is	 46.666666666666664
+
+Starting attack on image 16   15
+Original class: robin, American robin, Turdus migratorius
+  Target class: street sign
+Final class:  robin, American robin, Turdus migratorius
+Attack Failed using 10045 queries, success rate is	 43.75
+
+Starting attack on image 17   16
+Original class: bulbul
+  Target class: street sign
+Final class:  bulbul
+Attack Failed using 10045 queries, success rate is	 41.1764705882353
+
+Starting attack on image 18   17
+Original class: jay
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 9649 queries, success rate is	 44.44444444444444
+
+Starting attack on image 19   18
+Original class: magpie
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 10045 queries, success rate is	 47.36842105263158
+
+Starting attack on image 20   19
+Original class: chickadee
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 5623 queries, success rate is	 50.0

@@ -1,0 +1,182 @@
+group_size  32  batch_size  64
+Targeted Imagenet 
+
+Starting attack on image 0   20
+Original class: water ouzel, dipper
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 2475 queries, success rate is	 100.0
+
+Starting attack on image 1   21
+Original class: kite
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 2848 queries, success rate is	 100.0
+
+Starting attack on image 2   22
+Original class: bald eagle, American eagle, Haliaeetus leucocephalus
+  Target class: street sign
+Final class:  peacock
+Attack Failed using 10045 queries, success rate is	 66.66666666666667
+
+Starting attack on image 3   23
+Original class: vulture
+  Target class: street sign
+Final class:  vulture
+Attack Failed using 10045 queries, success rate is	 50.0
+
+Starting attack on image 4   24
+Original class: great grey owl, great gray owl, Strix nebulosa
+  Target class: street sign
+Final class:  great grey owl, great gray owl, Strix nebulosa
+Attack Failed using 10045 queries, success rate is	 40.0
+
+Starting attack on image 5   25
+Original class: European fire salamander, Salamandra salamandra
+  Target class: street sign
+Final class:  European fire salamander, Salamandra salamandra
+Attack Failed using 10045 queries, success rate is	 33.333333333333336
+
+Starting attack on image 6   26
+Original class: common newt, Triturus vulgaris
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 4607 queries, success rate is	 42.857142857142854
+
+Starting attack on image 7   27
+Original class: eft
+  Target class: street sign
+Final class:  eft
+Attack Failed using 10045 queries, success rate is	 37.5
+
+Starting attack on image 8   28
+Original class: spotted salamander, Ambystoma maculatum
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 7322 queries, success rate is	 44.44444444444444
+
+Starting attack on image 9   29
+Original class: axolotl, mud puppy, Ambystoma mexicanum
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 5755 queries, success rate is	 50.0
+
+Starting attack on image 10   30
+Original class: bullfrog, Rana catesbeiana
+  Target class: street sign
+Final class:  bullfrog, Rana catesbeiana
+Attack Failed using 10045 queries, success rate is	 45.45454545454545
+
+Starting attack on image 11   31
+Original class: tree frog, tree-frog
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 6283 queries, success rate is	 50.0
+
+Starting attack on image 12   32
+Original class: tailed frog, bell toad, ribbed toad, tailed toad, Ascaphus trui
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 4197 queries, success rate is	 53.84615384615385
+
+Starting attack on image 13   33
+Original class: loggerhead, loggerhead turtle, Caretta caretta
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 5809 queries, success rate is	 57.142857142857146
+
+Starting attack on image 14   34
+Original class: leatherback turtle, leatherback, leathery turtle, Dermochelys coriacea
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 1740 queries, success rate is	 60.0
+
+Starting attack on image 15   35
+Original class: mud turtle
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 5806 queries, success rate is	 62.5
+
+Starting attack on image 16   36
+Original class: terrapin
+  Target class: street sign
+Final class:  terrapin
+Attack Failed using 10045 queries, success rate is	 58.8235294117647
+
+Starting attack on image 17   37
+Original class: box turtle, box tortoise
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 3244 queries, success rate is	 61.111111111111114
+
+Starting attack on image 18   38
+Original class: banded gecko
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 5293 queries, success rate is	 63.1578947368421
+
+Starting attack on image 19   39
+Original class: common iguana, iguana, Iguana iguana
+  Target class: street sign
+Final class:  common iguana, iguana, Iguana iguana
+Attack Failed using 10045 queries, success rate is	 60.0
+
+Starting attack on image 20   40
+Original class: American chameleon, anole, Anolis carolinensis
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 7297 queries, success rate is	 61.904761904761905
+
+Starting attack on image 21   41
+Original class: whiptail, whiptail lizard
+  Target class: street sign
+Final class:  whiptail, whiptail lizard
+Attack Failed using 10045 queries, success rate is	 59.09090909090909
+
+Starting attack on image 22   42
+Original class: agama
+  Target class: street sign
+Final class:  agama
+Attack Failed using 10045 queries, success rate is	 56.52173913043478
+
+Starting attack on image 23   43
+Original class: frilled lizard, Chlamydosaurus kingi
+  Target class: street sign
+Final class:  frilled lizard, Chlamydosaurus kingi
+Attack Failed using 10045 queries, success rate is	 54.166666666666664
+
+Starting attack on image 24   44
+Original class: alligator lizard
+  Target class: street sign
+Final class:  alligator lizard
+Attack Failed using 10045 queries, success rate is	 52.0
+
+Starting attack on image 25   45
+Original class: Gila monster, Heloderma suspectum
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 4765 queries, success rate is	 53.84615384615385
+
+Starting attack on image 26   46
+Original class: green lizard, Lacerta viridis
+  Target class: street sign
+Final class:  green lizard, Lacerta viridis
+Attack Failed using 10045 queries, success rate is	 51.851851851851855
+
+Starting attack on image 27   47
+Original class: African chameleon, Chamaeleo chamaeleon
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 5051 queries, success rate is	 53.57142857142857
+
+Starting attack on image 28   48
+Original class: Komodo dragon, Komodo lizard, dragon lizard, giant lizard, Varanus komodoensis
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 5236 queries, success rate is	 55.172413793103445
+
+Starting attack on image 29   49
+Original class: African crocodile, Nile crocodile, Crocodylus niloticus
+  Target class: street sign
+Final class:  street sign
+Attack Succeeded with 4369 queries, success rate is	 56.666666666666664
