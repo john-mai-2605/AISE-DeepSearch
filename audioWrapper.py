@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from torchvision.models import resnet50
+from torchvision.models import resnet50, alexnet
 from torchvision import transforms
 from PIL import Image
 import torch
@@ -31,17 +31,27 @@ AUDDIR="audios/"
 INDICES=""
 # normalize = lambda x:(x-np.array([0.485, 0.456, 0.406]))/np.array([0.229, 0.224, 0.225])
 class CompatModel:
-    def __init__(self):
-		############################################################
-        self.model=resnet50()
-        self.model.fc = torch.nn.Linear(self.model.fc.in_features, 5) 
-        self.model.load_state_dict(torch.load('./audio_classifier/best_model_resnet50.pt'))
-		############################################################
+    def __init__(self, spectro = False):
+        self.spectro = spectro
+        ############################################################
+        if spectro:
+            self.model = resnet50()
+            self.model.fc = torch.nn.Linear(self.model.fc.in_features, 5) 
+            self.model.load_state_dict(torch.load('./audio_classifier/best_model_resnet50.pt'))         
+        else:
+            self.model=alexnet()
+            self.model.classifier[6] = torch.nn.Linear(model.classifier[6].in_features, 2) 
+            self.model.load_state_dict(torch.load('./audio_classifier/best_model.pt'))
+        ############################################################
         self.model.cpu()
         self.model.eval()
         self.calls=0
     def predict(self, wavs):
-        images = sig2plot(wavs)
+        if self.spectro:
+            images = sig2spec(wavs)
+        else:
+            images = sig2plot(wavs)
+
         self.calls+=images.shape[0]
         with torch.no_grad():
             t_images = transform(images).cpu()             
@@ -55,7 +65,8 @@ def read_wave(wav, label):
     path = AUDDIR + label + "/" + str(wav) + ".wav"
     input_data = read(path)
     audio = input_data[1]
-    return audio
+    sr = input_data[0]
+    return audio, sr
 
 def sig2plot(audio):
     plt.plot(audio)
@@ -63,14 +74,26 @@ def sig2plot(audio):
     plt.close()
     return Image.open('./audio_classifier/intermediary/plot.png')
 
+def sig2spec(audio):
+    f, t, Sxx = signal.spectrogram((np.mean(audio, axis=1)), sz, scaling='spectrum')
+    plt.pcolormesh(t, f, np.log10(Sxx))
+    plt.savefig('./audio_classifier/intermediary/plot.png')
+    plt.close()
+    return Image.open('./audio_classifier/intermediary/plot.png')   
+
 classes = ['dog'] # add more in the correct order of class 0, 1, ...
 inds=[360]
 
+x_test = []
+y_test = []
+
 if INDICES=="":
   for j, label in enumerate(classes):
-    x_test=np.stack([read_wave(i, label) for i in inds])
-    y_test=j*np.ones(len(x_test))
+    x_test.append(np.stack([read_wave(i, label)[0] for i in inds]).tolist())
+    y_test.append(j*np.ones(len(x_test)).tolist())
 if INDICES=="ALL":
   for j, label in enumerate(classes):
-    x_test=np.stack([read_wave(i, label) for i in tqdm(range(400))])
-    y_test=j*np.ones(len(x_test))
+    x_test.append(np.stack([read_wave(i, label)[0] for i in tqdm(range(400))]).tolist())
+    y_test.append(j*np.ones(len(x_test)).tolist())
+x_test = np.array(x_test)
+y_test = np.array(y_test)
