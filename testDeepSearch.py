@@ -16,9 +16,10 @@ import sys
 from datetime import datetime
 from os import mkdir
 from os.path import exists
-from deepSearch import *
 from tqdm import tqdm
 import argparse
+
+from deepSearch import *
 
 # Parse argument
 parser = argparse.ArgumentParser()
@@ -31,18 +32,20 @@ parser.add_argument('--undef', action ='store_true', default=False, help="turn o
 parser.add_argument('--proba', type=int, default=1, choices=[0,1], help="Output from model is probability (1, default) or class (0)")
 
 
-# Read the argument
+# Read the arguments
 args = parser.parse_args()
 targeted = args.targeted == 1
 target = args.target
 undefended = args.undef
 cifar_ = args.cifar
+proba = args.proba == 1
+
 log_entry = ""
 
+# Initial conditions for Imgnet
 img_x, img_y = 256, 256
 grs= 32
 batch_size = 64
-proba = args.proba == 1
 
 
 if targeted:
@@ -51,6 +54,7 @@ if targeted:
 else:
 	print('Non-targeted attack')
 	log_entry += "Non-targeted "
+	
 if cifar_:
 	log_entry += "Cifar "
 	if undefended:
@@ -69,13 +73,16 @@ else:
 	target_set = range(50)
 	log_entry += "Imagenet "
 
+# Creating folder to store results
 if not exists("DSBatched"):
     mkdir("DSBatched")
 path="DSBatched/"+str(datetime.now()).replace(":","_")+"/"
 mkdir(path)
 with open(path+"log.txt","w") as log_path:
+	# Comment this line to see results in console!
 	sys.stdout=log_path
-	loss=False
+	# ^!!!important!!!^
+	
 	Data={}
 	succ=0
 	tot=0
@@ -84,8 +91,13 @@ with open(path+"log.txt","w") as log_path:
 	for j in tqdm(target_set[:50]):
 		print("\nStarting attack on image", tot, " ", j)
 		tot+=1
-		ret=deepSearch(cifar_, x_test[j],y_test[j], mymodel,8/256,group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = False, targeted = targeted, target = target, proba = proba)
-		dump(ret[1].reshape(1,img_x,img_y,3),open(path+"image_"+"{:03d}".format(j)+".pkl","wb"))
+		#def deepSearch(cifar_, image, label, model, distortion_cap, 
+		#	group_size= 16, max_calls = 10000, batch_size = 64, verbose = False,
+		#	targeted = False, target = None, proba = True):
+		ret = deepSearch(cifar_, x_test[j], y_test[j], mymodel, 8/256, 
+			group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = False, 
+			targeted = targeted, target = target, proba = proba)
+		dump(ret[1].reshape(1,img_x,img_y,3),open(path+"image_"+"{:05d}".format(j)+".pkl","wb"))
 		Data[j]=(ret[0],ret[2])
 		if ret[0]:
 			succ+=1
