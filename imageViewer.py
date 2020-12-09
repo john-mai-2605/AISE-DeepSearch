@@ -34,16 +34,31 @@ def load_pkl(path):
 	
 if __name__ == "__main__":
 	view_DSbatched = bool(int(input("0: View Organized Results\n1: View DSBatched\n>>> ")))
-	files = load_pkl(select_directory(view_DSbatched))
-	imgs = []
-	for file_path in files:
-		with open(file_path,'rb') as file:
-			temp = pickle.load(file)
-			size = temp.shape[1:]
-			imgs.append(temp.reshape(size))
-	#imgs = [pickle.load(open(file_path, 'rb')).reshape(pickle.load(open(file_path, 'rb')).shape[1:]) for file_path in files]
-	for image in imgs:
-		plt.imshow(image)
-		plt.show()
+	directory = select_directory(view_DSbatched)
+	save_or_not = input("Would you like to save all the pickles into images? [y/n]\nIf not, you can chose to selectively see images.\n>>> ")
+	bulk_save = save_or_not.lower() == "y"
+	if bulk_save:
+		pkl_list = [file for file in os.listdir(directory) if file[-3:]=="pkl" and file[0] != "d"]
+		for pkl in pkl_list:
+			with open(directory+"/"+pkl,'rb') as img_file:
+				img = pickle.load(img_file)
+				img = img.reshape(img.shape[1:])
+				plt.imshow(img)
+				plt.axis("off")
+				if not os.path.exists(directory+"/images"):
+					os.mkdir(directory+"/images")
+				plt.savefig(directory+"/images/"+pkl[:-4]+".png",bbox_inches="tight",pad_inches=0)
+	else:
+		files = load_pkl(directory)
+		imgs = []
+		for file_path in files:
+			with open(file_path,'rb') as file:
+				temp = pickle.load(file)
+				size = temp.shape[1:]
+				imgs.append(temp.reshape(size))
+		#imgs = [pickle.load(open(file_path, 'rb')).reshape(pickle.load(open(file_path, 'rb')).shape[1:]) for file_path in files]
+		for image in imgs:
+			plt.imshow(image)
+			plt.show()
 			
 	
