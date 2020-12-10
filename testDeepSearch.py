@@ -72,7 +72,7 @@ if cifar_:
 	batch_size = 64
 elif spectro_:
 	from spectroWrapper import*
-	target_set = range(10)
+	target_set = range(50)
 	log_entry += "spetcro"
 	img_x, img_y = 369, 496
 	#img_x, img_y = 480, 640

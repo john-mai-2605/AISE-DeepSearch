@@ -47,7 +47,7 @@ def deepSearch(cifar_, spectro_, image, label, model, distortion_cap, group_size
 	rel_eval = lambda image : e.relative_evaluate(image, original_class, proba)
 	
 	# Initialize before loop
-	current_class = np.argmax(current_class_prob)
+	current_class = np.argmax(original_probability)
 	# Push image to lower bound
 	grouping = group_generation(img_size, group_size, options = "square")
 	current_image = image_mutate(image, grouping, lower, lower)

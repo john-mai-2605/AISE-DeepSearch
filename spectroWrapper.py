@@ -48,11 +48,14 @@ class CompatModel:
         self.calls+=1
         images = np.reshape(images, images.shape[1:])
         with torch.no_grad():
-            images = Image.fromarray(np.uint8(images[:,:,:3] * 256 - 0.5))
+            #images = Image.fromarray(np.uint8(images[:,:,:3] * 256 - 0.5))
+            images = Image.fromarray(np.uint8(images[:,:,:3]*255))
             t_images = transform(images).cuda()             
             res=self.model(t_images[None, ...].float())
             res=torch.nn.functional.softmax(res,dim=1)
-        return res.cpu().detach().numpy()
+        model_output = res.cpu().detach().numpy()
+        print(model_output)
+        return hello
         
 mymodel=CompatModel()
 
@@ -72,8 +75,8 @@ def read_wave(wav, label):
     image = np.array(pil_image)
     return image[:,:,:3]
 
-classes = ["Cat", "dog", "parrot", "human", "kid"] # add more in the correct order of class 0, 1, ...
-inds = range(1,3)
+classes = ['cat', 'dog', 'parrot', 'human', 'kid'] # add more in the correct order of class 0, 1, ...
+inds = range(4,14)
 
 x_test=[]
 y_test=[]
