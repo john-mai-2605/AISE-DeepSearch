@@ -41,7 +41,7 @@ class CompatModel:
         self.model.cpu()
         self.model.eval()
         self.calls=0
-    def predict(self, wavs):
+    def predict(self, wavs, **kwargs):
         images = sig2plot(wavs)
         self.calls+=images.shape[0]
         with torch.no_grad():

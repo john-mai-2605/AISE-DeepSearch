@@ -44,7 +44,8 @@ class CompatModel:
         self.model.cuda()
         self.model.eval()
         self.calls=0
-    def predict(self, images):
+    def predict(self, sigs, f, t):
+    	images = sig2spec(Sxx_dB, f, t)
         self.calls+=1
         images = np.reshape(images, images.shape[1:])
         with torch.no_grad():
@@ -65,8 +66,12 @@ def read_wave(wav, label):
     audio = input_data[1]
     sr = input_data[0]
     f, t, Sxx = signal.spectrogram((np.mean(audio, axis=1)), sr, scaling='spectrum')
-    print(Sxx.dtype)
-    plt.pcolormesh(t, f, np.log10(Sxx))
+    #print(Sxx.shape)
+    Sxx_dB = np.log10(Sxx)
+    return Sxx_dB, f, t
+
+def sig2spec(Sxx_db, f, t):
+    plt.pcolormesh(t, f, Sxx_dB)
     save_path = './audio_classifier/intermediary/' + label + "/" + str(wav) + '.png'
     plt.axis("off")
     plt.savefig(save_path, pad_inches = 0, bbox_inches = "tight")
@@ -83,11 +88,17 @@ x_test=[]
 y_test=[]
 if INDICES=="":
   for j, label in enumerate(classes):
-    x_test += [(read_wave(i, label) + 0.5)/256 for i in inds]
-    y_test += (j*np.ones(len(inds),dtype="int32")).tolist()
+    x_test += [(read_wave(i, label)[0] + 0.5)/256 for i in inds]
+    y_test += (j*np.ones(len(inds),dtype="int32")).tolist() 
+    fs += [read_wave(i, label)[1] for i in inds]
+    ts += [read_wave(i, label)[2] for i in inds]
 if INDICES=="ALL":
   for j, label in enumerate(classes):
-    x_test.append(np.stack([read_wave(i, label) for i in tqdm(range(100))]).tolist())
+    x_test.append(np.stack([read_wave(i, label)[0] for i in tqdm(range(100))]).tolist())
     y_test.append(j*np.ones(len(x_test)).tolist())
+    fs += [read_wave(i, label)[1] for i in range(100)]
+    ts += [read_wave(i, label)[2] for i in range(100)]
 x_test = np.array(x_test)
 y_test = np.array(y_test)
+fs = np.array(fs)
+ts = np.array(ts)
