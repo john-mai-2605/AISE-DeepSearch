@@ -55,7 +55,7 @@ class CompatModel:
             res=torch.nn.functional.softmax(res,dim=1)
         model_output = res.cpu().detach().numpy()
         print(model_output)
-        return hello
+        return model_output
         
 mymodel=CompatModel()
 
@@ -65,6 +65,7 @@ def read_wave(wav, label):
     audio = input_data[1]
     sr = input_data[0]
     f, t, Sxx = signal.spectrogram((np.mean(audio, axis=1)), sr, scaling='spectrum')
+    #print(Sxx.shape)
     plt.pcolormesh(t, f, np.log10(Sxx))
     save_path = './audio_classifier/intermediary/' + label + "/" + str(wav) + '.png'
     plt.axis("off")
