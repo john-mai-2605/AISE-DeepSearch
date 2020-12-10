@@ -3,7 +3,7 @@ import time
 import json
 
 class Evaluator:
-	def __init__(self, model, max_count, cifar_):
+	def __init__(self, model, max_count, cifar_, spectro_):
 		"""
 		"""
 		self.evaluation_count = 0
@@ -13,6 +13,7 @@ class Evaluator:
 		self.classes = json.load(open("classes.json","r"))
 		self.classes = {int(k):v for k,v in self.classes.items()}
 		self.cifar_ = cifar_
+		self.spectro_ = spectro_
 		
 	def current_class(self,image):
 		"""
@@ -28,8 +29,11 @@ class Evaluator:
 		CIFAR	(0~10)
 		"""
 		cifar_names = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
+		audio_names = ["Cat", "dog", "parrot", "human", "kid"]
 		if self.cifar_:
 			return(cifar_names[class_index])
+		elif self.spectro_:
+			return(audio_names[class_index])
 		return(self.classes[class_index])
 		
 	def evaluate(self, image, proba = True):

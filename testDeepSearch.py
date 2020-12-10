@@ -29,6 +29,7 @@ parser.add_argument('--targeted', type=int, default=0, choices = [0,1], help="Ta
 parser.add_argument('--target', type=int, default=0, help="Tartgeted class (applicable for targeted attack)")
 parser.add_argument('--cifar', action ='store_true', default=False, help="turn on for cifar")
 parser.add_argument('--undef', action ='store_true', default=False, help="turn on for undefended")
+parser.add_argument('--spectro', action ='store_true', default=False, help="turn on for spectro")
 parser.add_argument('--proba', type=int, default=1, choices=[0,1], help="Output from model is probability (1, default) or class (0)")
 
 
@@ -39,6 +40,7 @@ target = args.target
 undefended = args.undef
 cifar_ = args.cifar
 proba = args.proba == 1
+spectro_ = args.spectro
 
 log_entry = ""
 
@@ -68,6 +70,13 @@ if cifar_:
 	img_x, img_y = 32,32
 	grs = 4
 	batch_size = 64
+elif spectro_:
+	from spectroWrapper import*
+	target_set = range(50)
+	log_entry += "spetcro"
+	img_x, img_y = 369, 496
+	#img_x, img_y = 480, 640
+	grs = 32
 else:
 	from imgntWrapper import *
 	target_set = range(50)
@@ -80,7 +89,7 @@ path="DSBatched/"+str(datetime.now()).replace(":","_")+"/"
 mkdir(path)
 with open(path+"log.txt","w") as log_path:
 	# Comment this line to see results in console!
-	sys.stdout=log_path
+	#sys.stdout=log_path
 	# ^!!!important!!!^
 	
 	Data={}
@@ -94,7 +103,7 @@ with open(path+"log.txt","w") as log_path:
 		#def deepSearch(cifar_, image, label, model, distortion_cap, 
 		#	group_size= 16, max_calls = 10000, batch_size = 64, verbose = False,
 		#	targeted = False, target = None, proba = True):
-		ret = deepSearch(cifar_, x_test[j], y_test[j], mymodel, 8/256, 
+		ret = deepSearch(cifar_, spectro_, x_test[j], y_test[j], mymodel, 8/256, 
 			group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = False, 
 			targeted = targeted, target = target, proba = proba)
 		dump(ret[1].reshape(1,img_x,img_y,3),open(path+"image_"+"{:05d}".format(j)+".pkl","wb"))

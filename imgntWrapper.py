@@ -34,7 +34,7 @@ class CompatModel:
         self.calls=0
     def predict(self,images):
         #start_time = time.process_time()
-        self.calls+=images.shape[0]
+        self.calls+=1
         with torch.no_grad():
             t_images=torch.tensor(normalize(images),dtype=torch.float).cpu()             
             t_images=t_images.permute(0,3,1,2)
