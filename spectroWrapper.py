@@ -56,7 +56,6 @@ class CompatModel:
             res=self.model(t_images[None, ...].float())
             res=torch.nn.functional.softmax(res,dim=1)
         model_output = res.cpu().detach().numpy()
-        print(model_output)
         return model_output
         
 mymodel=CompatModel()
@@ -85,7 +84,7 @@ def sig2spec(Sxx_dB, j):
 
 classes = ['cat', 'dog', 'parrot', 'human', 'kid'] # add more in the correct order of class 0, 1, ...
 items_per_class= 3
-inds = range(4,4+items_per_class)
+inds = range(8,8+items_per_class)
 
 x_test=[]
 y_test=[]
