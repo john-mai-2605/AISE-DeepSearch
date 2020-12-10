@@ -52,6 +52,9 @@ if __name__ == "__main__":
 		files = load_pkl(directory)
 		imgs = []
 		for file_path in files:
+		# file_path = "./DSBatched/1021021301401040/dog_00000.pkl"
+		# file_path[-9:-4] = str(inds[j])
+		# file_path[-12:-9]= dog, cat, rot, man, kid
 			with open(file_path,'rb') as file:
 				temp = pickle.load(file)
 				size = temp.shape[1:]

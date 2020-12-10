@@ -44,13 +44,14 @@ class CompatModel:
         self.model.cuda()
         self.model.eval()
         self.calls=0
-    def predict(self, sigs, f, t):
-    	images = sig2spec(Sxx_dB, f, t)
+    def predict(self, sigs, **kwargs):
+        j=kwargs["j"]
+        sigs = sigs*30 - 15
+        images = sig2spec(sigs, j)
         self.calls+=1
-        images = np.reshape(images, images.shape[1:])
         with torch.no_grad():
             #images = Image.fromarray(np.uint8(images[:,:,:3] * 256 - 0.5))
-            images = Image.fromarray(np.uint8(images[:,:,:3]*255))
+            images = Image.fromarray(images[:,:,:3])
             t_images = transform(images).cuda()             
             res=self.model(t_images[None, ...].float())
             res=torch.nn.functional.softmax(res,dim=1)
@@ -68,11 +69,12 @@ def read_wave(wav, label):
     f, t, Sxx = signal.spectrogram((np.mean(audio, axis=1)), sr, scaling='spectrum')
     #print(Sxx.shape)
     Sxx_dB = np.log10(Sxx)
+    Sxx_dB = (Sxx_dB+15)/30
     return Sxx_dB, f, t
 
-def sig2spec(Sxx_db, f, t):
-    plt.pcolormesh(t, f, Sxx_dB)
-    save_path = './audio_classifier/intermediary/' + label + "/" + str(wav) + '.png'
+def sig2spec(Sxx_dB, j):
+    plt.pcolormesh(ts[j], fs[j], Sxx_dB.reshape(Sxx_dB.shape[1:]))
+    save_path = './audio_classifier/intermediary/' + label + "/" + str(inds[j%3]) + '.png'
     plt.axis("off")
     plt.savefig(save_path, pad_inches = 0, bbox_inches = "tight")
     #plt.savefig(save_path)
@@ -82,13 +84,16 @@ def sig2spec(Sxx_db, f, t):
     return image[:,:,:3]
 
 classes = ['cat', 'dog', 'parrot', 'human', 'kid'] # add more in the correct order of class 0, 1, ...
-inds = range(4,14)
+items_per_class= 3
+inds = range(4,4+items_per_class)
 
 x_test=[]
 y_test=[]
+fs = []
+ts = []
 if INDICES=="":
   for j, label in enumerate(classes):
-    x_test += [(read_wave(i, label)[0] + 0.5)/256 for i in inds]
+    x_test += [np.array(read_wave(i, label)[0]) for i in inds]
     y_test += (j*np.ones(len(inds),dtype="int32")).tolist() 
     fs += [read_wave(i, label)[1] for i in inds]
     ts += [read_wave(i, label)[2] for i in inds]
@@ -98,7 +103,6 @@ if INDICES=="ALL":
     y_test.append(j*np.ones(len(x_test)).tolist())
     fs += [read_wave(i, label)[1] for i in range(100)]
     ts += [read_wave(i, label)[2] for i in range(100)]
-x_test = np.array(x_test)
-y_test = np.array(y_test)
+
 fs = np.array(fs)
 ts = np.array(ts)

@@ -15,11 +15,11 @@ class Evaluator:
 		self.cifar_ = cifar_
 		self.spectro_ = spectro_
 		
-	def current_class(self,image):
+	def current_class(self,image, **kwargs):
 		"""
 		Test the image in the model and return the maximum class index.
 		"""
-		return(np.argmax(self.evaluate(image)))
+		return(np.argmax(self.evaluate(image, **kwargs)))
 		
 	def idx2name(self,class_index):
 		"""

@@ -7,7 +7,7 @@ import os
 import random
 #os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
-def deepSearch(cifar_, spectro_, image, label, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None, proba = True, f = None, t = None):
+def deepSearch(cifar_, spectro_, image, label, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None, proba = True, **kwargs):
 	"""
 	cifar_: A boolean value. Whether we are using a CIFAR model or not (using Imgnt)
 	image: The image to adverse one
@@ -100,7 +100,7 @@ def deepSearch(cifar_, spectro_, image, label, model, distortion_cap, group_size
 		success = current_class == target
 	
 	counts = e.evaluation_count
-	print("Final class: ", e.idx2name(e.current_class(current_image)))
+	print("Final class: ", e.idx2name(e.current_class(current_image, **kwargs)))
 	return (success, current_image, counts)
 		
 			
@@ -211,7 +211,7 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, targeted, ta
 					
 					
 		else:# single channel (grayscale) # this part of the code is outdated
-			group_index = group_number
+			group_index = group_number//3
 			
 			# Explorary step and evaluations
 			upper_exploratory, u_mutated = single_mutate(image, group_index, grouping, lower, upper, direction = True)

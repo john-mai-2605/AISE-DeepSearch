@@ -74,9 +74,9 @@ elif spectro_:
 	from spectroWrapper import*
 	target_set = range(50)
 	log_entry += "spetcro"
-	img_x, img_y = 369, 496
+	img_x, img_y = 129, -1
 	#img_x, img_y = 480, 640
-	grs = 32
+	grs = 50
 else:
 	from imgntWrapper import *
 	target_set = range(50)
@@ -103,12 +103,15 @@ with open(path+"log.txt","w") as log_path:
 		#def deepSearch(cifar_, image, label, model, distortion_cap, 
 		#	group_size= 16, max_calls = 10000, batch_size = 64, verbose = False,
 		#	targeted = False, target = None, proba = True):
-		if spectro_:
-			kwargs = {'f': fs[j], 't': ts[j]}
-		ret = deepSearch(cifar_, spectro_, x_test[j], y_test[j], mymodel, 8/256, 
+		if spectro_: 
+			kwargs = {'j': j}
+		ret = deepSearch(cifar_, spectro_, x_test[j], y_test[j], mymodel, 15/256, 
 			group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = False, 
 			targeted = targeted, target = target, proba = proba, **kwargs)
-		dump(ret[1].reshape(1,img_x,img_y,3),open(path+"image_"+"{:05d}".format(j)+".pkl","wb"))
+		if spectro_:
+			dump(ret[1].reshape(1,img_x,img_y),open(path+classes[j//items_per_class]+"_"+"{:05d}".format(inds[j])+".pkl","wb"))
+		else:
+			dump(ret[1].reshape(1,img_x,img_y,3),open(path+"image_"+"{:05d}".format(j)+".pkl","wb"))
 		Data[j]=(ret[0],ret[2])
 		if ret[0]:
 			succ+=1
