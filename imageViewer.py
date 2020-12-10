@@ -23,7 +23,7 @@ def select_directory(view_DSbatched):
 	return(out_most + directory_list[selection])
 	
 def load_pkl(path):
-	pkl_list = [file for file in os.listdir(path) if file[-3:]=="pkl" and file[0] != "d"]
+	pkl_list = [file for file in os.listdir(path) if file[-3:]=="pkl" and file[0:2] != "da"]
 	if len(pkl_list) == 0:
 		print("No .pkl file found")
 		return
@@ -38,7 +38,7 @@ if __name__ == "__main__":
 	save_or_not = input("Would you like to save all the pickles into images? [y/n]\nIf not, you can chose to selectively see images.\n>>> ")
 	bulk_save = save_or_not.lower() == "y"
 	if bulk_save:
-		pkl_list = [file for file in os.listdir(directory) if file[-3:]=="pkl" and file[0] != "d"]
+		pkl_list = [file for file in os.listdir(directory) if file[-3:]=="pkl" and file[0:2] != "da"]
 		for pkl in pkl_list:
 			with open(directory+"/"+pkl,'rb') as img_file:
 				img = pickle.load(img_file)
