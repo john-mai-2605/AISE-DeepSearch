@@ -36,7 +36,7 @@ class Evaluator:
 			return(audio_names[class_index])
 		return(self.classes[class_index])
 		
-	def evaluate(self, image, proba = True):
+	def evaluate(self, image, proba = True, **kwargs):
 		"""
 		image: Image you want to get probability array for.
 		proba: Whether to use raw probability output (True)
@@ -55,7 +55,7 @@ class Evaluator:
 			self.evaluation_count +=1
 			
 			# model.predict comes from *Wrapper.py
-			prediction = self.model.predict(np.reshape(image,shape))
+			prediction = self.model.predict(np.reshape(image,shape), **kwargs)
 			return prediction.reshape(-1)
 		else: # no probability, only ranked categorical output. Go to top_rank() for more detail.
 			predictions = np.array([])
@@ -73,7 +73,7 @@ class Evaluator:
 			prediction = np.mean(predictions, axis = 0)
 			return prediction
 		
-	def relative_evaluate(self, image, class_number, proba = True):
+	def relative_evaluate(self, image, class_number, proba = True, **kwargs):
 		"""
 		image: Image to evaluate it's score. The goal is to get the score below 0.
 		class_number: Index of class that we are measuring the probability to.
@@ -84,7 +84,7 @@ class Evaluator:
 		Relative output is probability gap between a specified class and all the other ones.
 		We will be trying to minimize the gap until one reaches negative in deepsearch
 		"""
-		new_probability = self.evaluate(image, proba)
+		new_probability = self.evaluate(image, proba, **kwargs)
 		class_prob = new_probability[class_number] 
 		
 		relative_score = class_prob - new_probability
@@ -93,7 +93,7 @@ class Evaluator:
 		relative_score[class_number] = 1
 		return relative_score
 
-	def targeted_evaluate(self, image, target, proba = True):
+	def targeted_evaluate(self, image, target, proba = True, **kwargs):
 		"""
 		This is just like regualr evaluate(), with a little more to detect the target has been reached.
 		It outputs absolute probabilities until target class is most prominent.

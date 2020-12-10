@@ -7,7 +7,7 @@ import os
 import random
 #os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
-def deepSearch(cifar_, spectro_, image, label, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None, proba = True):
+def deepSearch(cifar_, spectro_, image, label, model, distortion_cap, group_size= 16, max_calls = 10000, batch_size = 64, verbose = False, targeted = False, target = None, proba = True, f = None, t = None):
 	"""
 	cifar_: A boolean value. Whether we are using a CIFAR model or not (using Imgnt)
 	image: The image to adverse one
@@ -28,7 +28,7 @@ def deepSearch(cifar_, spectro_, image, label, model, distortion_cap, group_size
 	"""
 	# You may skip initial part
 	e = Evaluator(model, max_calls, cifar_, spectro_)
-	original_probability = e.evaluate(image)
+	original_probability = e.evaluate(image, **kwargs)
 	original_class = label
 	print("Original class: {}".format(e.idx2name(original_class)))
 	current_class_prob = original_probability[original_class]
@@ -44,7 +44,7 @@ def deepSearch(cifar_, spectro_, image, label, model, distortion_cap, group_size
 	
 	# Algorithm 2: line 5
 	#rel_eval = lambda image : e.evaluate(image)[original_class]
-	rel_eval = lambda image : e.relative_evaluate(image, original_class, proba)
+	rel_eval = lambda image : e.relative_evaluate(image, original_class, proba, **kwargs)
 	
 	# Initialize before loop
 	current_class = np.argmax(original_probability)
@@ -72,7 +72,7 @@ def deepSearch(cifar_, spectro_, image, label, model, distortion_cap, group_size
 					if verbose:
 						print("\nGroup size: {}".format(group_size))
 				current_image = mutated_image
-				current_class = np.argmax(e.evaluate(current_image))
+				current_class = np.argmax(e.evaluate(current_image, **kwargs))
 		success = not current_class == original_class
 	else:
 		print("  Target class: {}".format(e.idx2name(target)))
