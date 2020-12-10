@@ -211,23 +211,57 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, targeted, ta
 					
 					
 		else:# single channel (grayscale) # this part of the code is outdated
-			upper_exploratory = single_mutate(image, group_index, grouping, lower, upper, direction = True)
-			lower_exploratory = single_mutate(image, group_index, grouping, lower, upper, direction = False)
-			upper_score = rel_eval(upper_exploratory)
-			lower_score = rel_eval(lower_exploratory)
+			group_index = group_number
+			
+			# Explorary step and evaluations
+			upper_exploratory, u_mutated = single_mutate(image, group_index, grouping, lower, upper, direction = True)
+			lower_exploratory, l_mutated = single_mutate(image, group_index, grouping, lower, upper, direction = False)
+			if u_mutated:
+				upper_score = rel_eval(upper_exploratory)
+			else:
+				upper_score = base_score
+			if l_mutated:
+				lower_score = rel_eval(lower_exploratory)
+			else:
+				lower_score = base_score
 			u_target_score = upper_score[target_class]
 			l_target_score = lower_score[target_class]
+			
 			# If adversarial input is found during exploration,
 			# Stop there
 			if u_target_score < 0:
-				return(upper_exploratory, upper_score[target_class])
+				return(upper_exploratory)
 			if l_target_score < 0:
-				return(lower_exploratory, lower_score[target_class])
+				return(lower_exploratory)
+				
+			# Keeping decision note based on explorary step.
 			dir = u_target_score < l_target_score
+			if u_target_score == l_target_score:
+				dir = bool(random.getrandbits(1))
 			direction_array[group_index] = dir
+			
+			# Keep track of minimum during process
 			if min((u_target_score,l_target_score))<minimum:
-				minimum_record = (group_index, ch, dir)
+				minimum_record = (group_index, 0, dir, da_keep)
 				minimum = min((u_target_score,l_target_score))
+			batch_count += 1
+			
+			# Apply intermediate direction decisions.
+			if batch_count == batch_size:
+				da_keep = direction_array.copy()
+				batch_count = 0
+				image = image_mutate(image, grouping, lower,upper, da_keep)
+				base_score = rel_eval(image)
+				if not targeted: # For normal cases, go for the nearest hill
+					target_class = np.argmin(base_score)
+				if verbose:
+					probabilities = e.evaluate(image)
+					current_class = np.argmax(probabilities)
+					new_score = base_score[target_class]
+					print(str(e.evaluation_count) + "/" + str(e.max_count) + " Score: {:.3e}".format(new_score),end="\t\t\t\t\t\n")
+					print("currentC: {0}...  currentP: {2:.3e}  targetP: {1:.3e}".format(e.idx2name(current_class)[:7], probabilities[target_class], np.max(probabilities)), end = '\r\b\r')
+				if e.evaluation_count > e. max_count:
+					break
 	
 	# Apply the whole direction decisions and return the fittest compared against minimum tracked during process.
 	mutated_image = image_mutate(image, grouping, lower, upper, direction_array)
@@ -235,7 +269,10 @@ def approx_min(image, lower, upper, rel_eval, grouping, batch_size, targeted, ta
 	if(minimum < total_rel_score[target_class]): # If the final image is not fit enough
 		# Apply the minimu conditions found in process
 		group_index, ch, direction, da = minimum_record
-		da[group_index,ch] = direction
+		if is_color:
+			da[group_index,ch] = direction
+		else:
+			da[group_index] = direction
 		mutated_image = image_mutate(image, grouping, lower, upper, da)
 	return(mutated_image)
 

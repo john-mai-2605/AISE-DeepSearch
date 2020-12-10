@@ -84,6 +84,12 @@ def read_direction(image,lower,upper,grouping):
 				group_is_upper_bounded = np.product(image[group*3+ch] == upper[group*3+ch])
 				direction_array[group_index,ch] = group_is_upper_bounded
 			group_index += 1
+	else:
+		group_index = 0
+		for group in grouping:
+			group_is_upper_bounded = np.product(image[group] == upper[group])
+			direction_array[group_index] = group_is_upper_bounded
+			group_index += 1
 	return direction_array
 	
 def create_boundary_palette(image, distortion_cap):
@@ -150,7 +156,7 @@ def single_mutate(image, group_index, grouping_scheme, lower, upper, direction =
 	# Channel remerge
 	if is_color:
 		if np.product(mutated[replacing_group_indices] == alternative_image[replacing_group_indices*3 + channel]):
-			return (image, False)
+			return (image.copy(), False)
 		mutated[replacing_group_indices] = alternative_image[replacing_group_indices*3 + channel]
 		temp = np.copy(image)
 		temp[:,:,channel] = np.reshape(mutated, original_shape)
