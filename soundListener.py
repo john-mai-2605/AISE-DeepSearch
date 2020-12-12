@@ -29,7 +29,7 @@ def select_directory(view_DSbatched):
 	return(out_most + directory_list[selection])
 	
 def load_pkl(path):
-	pkl_list = [file for file in os.listdir(path) if file[-3:]=="pkl" and file[0] != "d"]
+	pkl_list = [file for file in os.listdir(path) if file[-3:]=="pkl" and file[0:2] != "da"]
 	if len(pkl_list) == 0:
 		print("No .pkl file found")
 		return
@@ -68,46 +68,29 @@ def spec2sig(spec, name, sr, n):
 if __name__ == "__main__":
 	view_DSbatched = bool(int(input("0: View Organized Results\n1: View DSBatched\n>>> ")))
 	directory = select_directory(view_DSbatched)
-	save_or_not = input("Would you like to save all the pickles into images? [y/n]\nIf not, you can chose to selectively see images.\n>>> ")
-	bulk_save = save_or_not.lower() == "y"
-	if bulk_save:
-		pkl_list = [file for file in os.listdir(directory) if file[-3:]=="pkl" and file[0] != "d"]
-		for pkl in pkl_list:
-			with open(directory+"/"+pkl,'rb') as img_file:
-				img = pickle.load(img_file)
-				img = img.reshape(img.shape[1:])
-				plt.imshow(img)
-				plt.axis("off")
-				if not os.path.exists(directory+"/images"):
-					os.mkdir(directory+"/images")
-				plt.savefig(directory+"/images/"+pkl[:-4]+".png",bbox_inches="tight",pad_inches=0)
-	else:
-		files = load_pkl(directory)
-		imgs = []
-		ps = []
-		labels = []
-		inds = []
-		amps = []
-		srs = []
-		ns = []
-		for file_path in files:
-			with open(file_path,'rb') as file:
-				temp = pickle.load(file)
-				size = temp.shape[1:]
-				imgs.append(temp.reshape(size))
-			name = file_path.split("/")[-1]
-			label, wav = name[0:-10], int(name[-9:-4])
-			n, p, sr = read_wave(wav, label)
-			ns.append(n)
-			srs.append(sr)
-			ps.append(p)
-			labels.append(label)
-			inds.append(wav)
-		#imgs = [pickle.load(open(file_path, 'rb')).reshape(pickle.load(open(file_path, 'rb')).shape[1:]) for file_path in files]
-		for i, image in enumerate(imgs):
-			amp = image*90-60
-			spec = librosa.db_to_amplitude(amp)*ps[i]
-			#spec = 10**((image*30-15)/20)#*np.exp((0+1j)*phases[i])
-			spec2sig(spec, f"{labels[i]}_{inds[i]}", srs[i], ns[i])
+	files = load_pkl(directory)
+	imgs = []
+	phases = []
+	labels = []
+	inds = []
+	amps = []
+	for file_path in files:
+		with open(file_path,'rb') as file:
+			temp = pickle.load(file)
+			size = temp.shape[1:]
+			imgs.append(temp.reshape(size))
+		name = file_path.split("/")[-1]
+		label, wav = name[0:-10], int(name[-9:-4])
+		amplitude, f, t = read_wave_amplitude(wav, label)
+		phase, f, t = read_wave_phase(wav, label)
+		amps.append(amplitude)
+		phases.append(phase)
+		labels.append(label)
+		inds.append(wav)
+	#imgs = [pickle.load(open(file_path, 'rb')).reshape(pickle.load(open(file_path, 'rb')).shape[1:]) for file_path in files]
+	for i, image in enumerate(imgs):
+		spec = amps[i]#*np.exp((0+1j)*phases[i])
+		#spec = 10**((image*30-15)/20)#*np.exp((0+1j)*phases[i])
+		spec2sig(spec, f"{labels[i]}_{inds[i]}")
 			
 	
