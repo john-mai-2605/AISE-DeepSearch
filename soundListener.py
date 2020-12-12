@@ -56,6 +56,7 @@ def read_wave(wav, label):
     stft = librosa.stft(audio_pad, n_fft = n_fft)
     _, phase = librosa.magphase(stft)
     return n, phase, sr
+
 def spec2sig(spec, name, sr, n):
     #_, audio = signal.istft(spec)
     audio = librosa.spectrum.istft(spec, length = n)
@@ -73,7 +74,8 @@ if __name__ == "__main__":
 	phases = []
 	labels = []
 	inds = []
-	amps = []
+	ns = []
+	srs = []
 	for file_path in files:
 		with open(file_path,'rb') as file:
 			temp = pickle.load(file)
@@ -81,16 +83,16 @@ if __name__ == "__main__":
 			imgs.append(temp.reshape(size))
 		name = file_path.split("/")[-1]
 		label, wav = name[0:-10], int(name[-9:-4])
-		amplitude, f, t = read_wave_amplitude(wav, label)
-		phase, f, t = read_wave_phase(wav, label)
-		amps.append(amplitude)
+		n, phase, sr = read_wave(wav, label)
+		ns.append(n)
 		phases.append(phase)
 		labels.append(label)
 		inds.append(wav)
+		srs.append(sr)
 	#imgs = [pickle.load(open(file_path, 'rb')).reshape(pickle.load(open(file_path, 'rb')).shape[1:]) for file_path in files]
 	for i, image in enumerate(imgs):
-		spec = amps[i]#*np.exp((0+1j)*phases[i])
-		#spec = 10**((image*30-15)/20)#*np.exp((0+1j)*phases[i])
-		spec2sig(spec, f"{labels[i]}_{inds[i]}")
+		amp = librosa.db_to_amplitude(image*90-60)
+		spec = amp*phases[i]
+		spec2sig(spec, f"{labels[i]}_{inds[i]}", srs[i], ns[i])
 			
 	
