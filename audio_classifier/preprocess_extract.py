@@ -25,8 +25,8 @@ root = "../audios"
 # with youtube_dl.YoutubeDL(ydl_opts) as ydl:
 #     ydl.download([url_kid])
 
-# #convert mp3 to wav
-# classes = ['cat', 'dog', 'parrot', 'human', 'kid']
+#convert mp3 to wav
+classes = ['cat', 'dog', 'parrot', 'human', 'kid']
 # for x in classes:
 #   sound = AudioSegment.from_mp3(root+"/"+x+"s.mp3")
 #   sound.export(root+"/"+x+"s.wav", format="wav")
@@ -49,6 +49,7 @@ from scipy import signal
 import matplotlib.pyplot as plt
 from os import walk
 import os
+import librosa
 
 # cat_wavs, dog_wavs, parrot_wavs, human_wavs, kids_wavs  
 wavs = [[] for i in range(5)]
@@ -66,18 +67,19 @@ for i,cur_wavs in enumerate(wavs): #100, 100, 60, 100, 91
   newDir = root+"/plots/"+animal + "Plots"
   if not os.path.exists(newDir):
     os.makedirs(newDir)
-  count = 0
   for wav in cur_wavs:
-    if count < 100:
-      sz, audio = read(root+"/" +animal+ "/" + wav)
-      f, t, Sxx = signal.spectrogram((np.mean(audio, axis=1)), sz, scaling='spectrum')
-      plt.pcolormesh(t, f, np.log10(Sxx))
-      plt.savefig(newDir + "/" + wav.split('.')[0] + '.png') 
-      # plt.ylabel('f / Hz')
-      # plt.xlabel('t / s')
-      # plt.show()
+      path = root+"/" +animal+ "/" + wav
+      audio, sr =  librosa.load(path, sr = None)
+      n = len(audio)
+      n_fft = 204
+      audio_pad = librosa.util.fix_length(audio, n + n_fft // 2)
+      stft = librosa.stft(audio_pad, n_fft = n_fft)
+      magnitude, phase = librosa.magphase(stft)
+      magnitude_db = librosa.amplitude_to_db(magnitude)
+      plt.imshow(magnitude_db, interpolation='nearest', aspect='auto')
+      plt.axis("off")
+      plt.savefig(newDir + "/" + wav.split('.')[0] + '.png',  pad_inches = 0, bbox_inches = "tight") 
       plt.close('all')
-      count += 1
 
 
 for i,cur_wavs in enumerate(wavs): #100, 100, 60, 100, 91 
