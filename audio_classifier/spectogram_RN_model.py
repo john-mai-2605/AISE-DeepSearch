@@ -8,7 +8,7 @@ import torchvision.transforms as transforms
 import torch.nn as nn
 
 #DEFINE root dir
-root = ""
+root = "../audios"
 classes = ['cat', 'dog', 'parrot', 'human', 'kid']
 num_classes = len(classes)
 
@@ -41,7 +41,7 @@ model = model.to(device)
 
 NUM_EPOCHS = 10
 best_accuracy = 0.0
-model_path = root + '/model_RN_spectogram.pt'
+model_path = root + '/model_librosa_RN.pt'
 
 optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 criterion = nn.CrossEntropyLoss()

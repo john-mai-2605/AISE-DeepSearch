@@ -43,26 +43,27 @@ def read_wave_amplitude(wav, label):
     input_data = scipy.io.wavfile.read(path)
     audio = input_data[1]
     sr = input_data[0]
-    f, t, Sxx = signal.spectrogram((np.mean(audio, axis=1)), sr, mode='amplitude')
+    f, t, Sxx = signal.spectrogram((np.mean(audio, axis=1)), sr, mode='magnitude')
     #print(Sxx.shape)
     return Sxx, f, t
 
-def read_wave_phase(wav, label):
+def read_wave(wav, label):
     path = "audios/" + label + "/" + str(wav) + ".wav"
-    input_data = scipy.io.wavfile.read(path)
-    audio = input_data[1]
-    sr = input_data[0]
-    f, t, Sxx = signal.spectrogram((np.mean(audio, axis=1)), sr, mode='phase')
-    #print(Sxx.shape)
-    return Sxx, f, t
-
-def spec2sig(spec, name):
+    audio, sr =  librosa.load(path, sr = None)
+    n = len(audio)
+    n_fft = 204
+    audio_pad = librosa.util.fix_length(audio, n + n_fft // 2)
+    stft = librosa.stft(audio_pad, n_fft = n_fft)
+    _, phase = librosa.magphase(stft)
+    return n, phase, sr
+def spec2sig(spec, name, sr, n):
     #_, audio = signal.istft(spec)
-    audio = librosa.spectrum.griffinlim(spec)
+    audio = librosa.spectrum.istft(spec, length = n)
     newDir = './Audio_Results/audio_from_spec'
     if not os.path.exists(newDir):
         os.makedirs(newDir)        
-    sf.write(f"{newDir}/{name}.wav", audio, 22500)
+    sf.write(f"{newDir}/{name}.wav", audio, sr)
+
 
 if __name__ == "__main__":
 	view_DSbatched = bool(int(input("0: View Organized Results\n1: View DSBatched\n>>> ")))
@@ -83,10 +84,12 @@ if __name__ == "__main__":
 	else:
 		files = load_pkl(directory)
 		imgs = []
-		phases = []
+		ps = []
 		labels = []
 		inds = []
 		amps = []
+		srs = []
+		ns = []
 		for file_path in files:
 			with open(file_path,'rb') as file:
 				temp = pickle.load(file)
@@ -94,16 +97,17 @@ if __name__ == "__main__":
 				imgs.append(temp.reshape(size))
 			name = file_path.split("/")[-1]
 			label, wav = name[0:-10], int(name[-9:-4])
-			amplitude, f, t = read_wave_amplitude(wav, label)
-			phase, f, t = read_wave_phase(wav, label)
-			amps.append(amplitude)
-			phases.append(phase)
+			n, p, sr = read_wave(wav, label)
+			ns.append(n)
+			srs.append(sr)
+			ps.append(p)
 			labels.append(label)
 			inds.append(wav)
 		#imgs = [pickle.load(open(file_path, 'rb')).reshape(pickle.load(open(file_path, 'rb')).shape[1:]) for file_path in files]
 		for i, image in enumerate(imgs):
-			spec = amps[i]#*np.exp((0+1j)*phases[i])
+			amp = image*90-60
+			spec = librosa.db_to_amplitude(amp)*ps[i]
 			#spec = 10**((image*30-15)/20)#*np.exp((0+1j)*phases[i])
-			spec2sig(spec, f"{labels[i]}_{inds[i]}")
+			spec2sig(spec, f"{labels[i]}_{inds[i]}", srs[i], ns[i])
 			
 	
