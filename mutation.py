@@ -54,6 +54,63 @@ def group_generation(size = (3,3), group_size = 2, options = ""):
 	else: # no option match found
 		print("[group_generation]Unavailable option: ", end = str(option) + "\n")
 		return np.array([[i] for i in range(size_x*size_y)])
+
+def random_group_generation(size = (3,3), group_size = 2, options = ""):
+  size_y, size_x = size
+  """
+	size: Size of the image to be divided into groups.
+	group_size: Width of group if the group was square.
+	options: Reserved parameter in case of other grouping patterns.
+
+	This method outputs  a list with groups of indices. For example,
+		_______________
+	|0  |1  |  2|  3|	If this square was grouped into 4 pixels,
+	|___|___|___|___|	[[0, 1, 4, 5],
+	|4  |5  |  6|  7|	 [2, 3, 6, 7],
+	|___|___|___|___|	 [8, 9, 12, 13],
+	|   |   |   |   |	 [10, 11, 14, 15]]
+	|8__|9__|_10|_11|	will be the outcome.
+	|   |   |   |   |	
+	|12_|13_|_14|_15|	
+
+	If the groups cannot be sized equally, the rightmost and bottom
+	groups will be cropped."""
+	"""
+	idea behind the implementation is:
+	1. Fill the pixels with sequential indices
+	2. Slice and return the slices.
+
+	Channel invariant
+  """
+	
+	# trivial case
+  if group_size < 1:
+    return np.array([[i] for i in range(size_x*size_y)])
+		
+  if options =="" or options.lower() == "square":
+		
+		# the "+ group_size -1" is for ceiling to integer
+    group_number_x = (size_x + group_size - 1) // group_size
+    group_number_y = (size_y + group_size - 1) // group_size
+		
+    numbers = np.arange(size_x*size_y)
+    np.random.shuffle(numbers)
+    pre_cut = np.reshape(numbers,(size_y, size_x))
+  
+		
+		# j*gs is starting index_x of a group
+		# i*gs is starting index_y of a group
+		# To maintain x as horizontal, it is secondary index.
+    gs = group_size
+    return [np.reshape(pre_cut[i*gs:(i+1)*gs , j*gs:(j+1)*gs],-1) for i in range(group_number_y) for j in range(group_number_x)]
+		#breakdown of above^
+		# 1. for i in range(group_number_x) 
+		#		for j in range(group_number_y)
+		#			pre_cut[i*gs:(i+1)*gs , j*gs:(j+1)*gs]
+		# 2. reshaped into single dimensional array
+  else: # no option match found
+    print("[group_generation]Unavailable option: ", end = str(option) + "\n")
+    return np.array([[i] for i in range(size_x*size_y)])
 		
 def read_direction(image,lower,upper,grouping):
 	"""
