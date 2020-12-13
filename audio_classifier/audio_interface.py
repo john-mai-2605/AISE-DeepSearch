@@ -27,8 +27,11 @@ def normalize(vect_in, percent_acceptation=80, not_clip_until_acceptation_time_f
     return np.divide(matrix_clip, percent_val_matrix)
 
 def sig2spec(wave_path, n_fft = 1024, hop_length = 512, norm = True, save = False):
-    audio, sr =  librosa.load(wave_path, sr = 22500)
-    stft = librosa.stft(audio, n_fft = n_fft, hop_length = hop_length)
+    audio, sr =  librosa.load(wave_path, sr = None)
+    n = len(audio)
+    n_fft = 204
+    audio_pad = librosa.util.fix_length(audio, n + n_fft // 2)
+    stft = librosa.stft(audio_pad, n_fft = n_fft)
     magnitude, phase = librosa.magphase(stft)
     magnitude_db = librosa.amplitude_to_db(magnitude)
     if save:
@@ -77,9 +80,7 @@ def mfcc2sig(mfcc, name):
 
 
 if __name__ == '__main__':
-    spec = sig2mfcc('360.wav')
-    plt.figure()
-    plt.axis('off')
-    plt.imshow(spec, cmap='Reds', interpolation='nearest', aspect='auto')
+    spec, _ = sig2spec('../Audio_Results/audio_from_spec/cat_8.wav')
+    plt.imshow(spec, interpolation='nearest', aspect='auto')
+    plt.axis("off")
     plt.show()
-    mfcc2sig(spec, 'test')
