@@ -90,7 +90,7 @@ path="DSBatched/"+str(datetime.now()).replace(":","_")+"/"
 mkdir(path)
 with open(path+"log.txt","w") as log_path:
 	# Comment this line to see results in console!
-	sys.stdout=log_path
+	#sys.stdout=log_path
 	# ^!!!important!!!^
 	
 	Data={}
@@ -104,10 +104,9 @@ with open(path+"log.txt","w") as log_path:
 		#def deepSearch(cifar_, image, label, model, distortion_cap, 
 		#	group_size= 16, max_calls = 10000, batch_size = 64, verbose = False,
 		#	targeted = False, target = None, proba = True):
-		if spectro_: 
-			kwargs = {'j': j}
-		ret = deepSearch(cifar_, spectro_, x_test[j], y_test[j], mymodel, 5/256, 
-			group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = False, 
+		kwargs = {'j': j}
+		ret = deepSearch(cifar_, spectro_, x_test[j], y_test[j], mymodel, 8/256, 
+			group_size = grs, max_calls = 10000, batch_size = batch_size, verbose = True, 
 			targeted = targeted, target = target, proba = proba, **kwargs)
 		if spectro_:
 			dump(ret[1].reshape(1,img_x,img_y),open(path+classes[j//items_per_class]+"_"+"{:05d}".format(inds[j%items_per_class])+".pkl","wb"))
